@@ -3,11 +3,16 @@ using UnityEngine;
 public class AnimationCalls : MonoBehaviour
 {
     public GameObject parent;
+
+    private PlayerMove script;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        script = parent.GetComponent<PlayerMove>();
     }
+
 
     // Update is called once per frame
     void Update()
@@ -15,13 +20,15 @@ public class AnimationCalls : MonoBehaviour
         
     }
 
-    void EndAim()
+
+    private void StopStartThrow()
     {
-        parent.GetComponent<PlayerMove>().EndAim();
+        script.StopStartThrow();
     }
 
-    void EndThrow()
+
+    private void StopMidThrow()
     {
-        parent.GetComponent<PlayerMove>().EndThrow();
+        script.StopMidThrow();
     }
 }

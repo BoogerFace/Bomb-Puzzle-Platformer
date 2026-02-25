@@ -6,6 +6,7 @@ TagManager:
   tags:
   - FxTemporaire
   - Destructible
+  - MegaBomb
   layers:
   - Default
   - TransparentFX

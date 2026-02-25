@@ -23,7 +23,7 @@ public class MegaBomb : MonoBehaviour
         }
     }
 
-    void Explode()
+    public void Explode()
     {
         if (exploded)
             return;

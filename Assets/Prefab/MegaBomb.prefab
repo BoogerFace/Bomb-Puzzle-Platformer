@@ -26,11 +26,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 89adef98215c5624e95d04f4c48b8f5a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.860002
+      value: 7.8599963
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 89adef98215c5624e95d04f4c48b8f5a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8.000009
+      value: 45.000008
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 89adef98215c5624e95d04f4c48b8f5a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -66,6 +66,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 89adef98215c5624e95d04f4c48b8f5a, type: 3}
       propertyPath: m_Name
+      value: MegaBomb
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 89adef98215c5624e95d04f4c48b8f5a, type: 3}
+      propertyPath: m_TagString
       value: MegaBomb
       objectReference: {fileID: 0}
     m_RemovedComponents: []

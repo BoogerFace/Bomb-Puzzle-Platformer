@@ -4,18 +4,27 @@ using UnityEngine.InputSystem;
 public class PlayerMove : MonoBehaviour
 {
     public GameObject cam;
+    public GameObject head;
+    public GameObject bombSpawn;
+    public GameObject bombPrefab;
 
     private InputAction moveAction;
     private Vector2 moveValue;
     private InputAction jumpAction;
     private InputAction aimAction;
-    private InputAction atkAction;
+    private InputAction throwAction;
 
     private float speed = 300f;
     private float jumpForce = 12f;
     private float jumpMult = 2f;
-    private bool isGrounded = true;
+    private bool isGrounded = false;
+    private bool isRunning = false;
     private bool isAiming = false;
+    private bool isThrowing = false;
+    private Vector3 lookDirection;
+    private int groundCount = 0;
+    private Vector3 throwHeadDirection;
+    private Vector3 bombDirection;
 
     private Rigidbody rb;
     private Animator anim;
@@ -33,7 +42,9 @@ public class PlayerMove : MonoBehaviour
         moveAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
         aimAction = InputSystem.actions.FindAction("Aim");
-        atkAction = InputSystem.actions.FindAction("Attack");
+        throwAction = InputSystem.actions.FindAction("Attack");
+
+        lookDirection = model.transform.forward;
     }
 
     // Update is called once per frame
@@ -41,82 +52,62 @@ public class PlayerMove : MonoBehaviour
     {
         moveValue = moveAction.ReadValue<Vector2>();
 
-        if (moveAction.WasPerformedThisFrame() && !isAiming)
+        if (moveAction.WasPressedThisFrame() && isGrounded)
         {
-            model.transform.LookAt(new Vector3(model.transform.position.x + moveValue.x, model.transform.position.y, model.transform.position.z + moveValue.y));
+            anim.CrossFadeInFixedTime("Running", .1f, 0);
         }
-
+        else if (moveAction.WasReleasedThisFrame() && isGrounded)
+        {
+            anim.CrossFadeInFixedTime("Idle", .1f, 0);
+        }
+        
         if (moveAction.IsPressed())
         {
-            anim.SetBool("isRunning", true);
+            isRunning = true;
+            lookDirection = Vector3.RotateTowards(lookDirection, new Vector3(moveValue.x, 0, moveValue.y), 15f * Time.deltaTime, 0f);
+            model.transform.LookAt(new Vector3(model.transform.position.x + lookDirection.x, model.transform.position.y, model.transform.position.z + lookDirection.z));
         }
         else
         {
-            anim.SetBool("isRunning", false);
+            isRunning = false;
         }
-
-        cam.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         
-        if (jumpAction.WasPressedThisFrame() && isGrounded && !isAiming)
+        if (jumpAction.WasPressedThisFrame() && isGrounded)
         {
+            anim.CrossFadeInFixedTime("Jump_Start", .1f, 0);
             isGrounded = false;
-            anim.SetBool("isJumping", true);
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         }
-
-        if (rb.linearVelocity.y < -1)
+        
+        if (aimAction.WasPressedThisFrame() && !isThrowing)
         {
-            anim.SetBool("isFalling", true);
+            anim.SetFloat("ThrowSpeed", 1);
         }
-        else
+        else if (aimAction.WasReleasedThisFrame() && !isThrowing)
         {
-            anim.SetBool("isFalling", false);
+            anim.SetFloat("ThrowSpeed", -1);
         }
 
-        if (aimAction.WasPerformedThisFrame() && isGrounded && !isAiming)
+        if (aimAction.IsPressed() && !isThrowing)
         {
             isAiming = true;
-            rb.linearVelocity = new Vector3(0,0,0);
-            anim.SetBool("isAiming", true);
-            anim.SetBool("isRunning", false);
         }
-        else if (aimAction.WasCompletedThisFrame())
+        else if (!isThrowing)
         {
-            anim.SetBool("isAiming", false);
+            isAiming = false;
         }
-
-        if (aimAction.IsPressed() && isGrounded && anim.GetBool("isAiming"))
+        
+        if (throwAction.WasPressedThisFrame() && isAiming)
         {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            
-            if (Physics.Raycast(ray, out hit)) {
-                Transform objectHit = hit.transform;
-                
-                // Do something with the object that was hit by the raycast.
-                // GameObject capsule = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                // capsule.transform.position = hit.point;
-                // Destroy(capsule.GetComponent<SphereCollider>());
-                // Destroy(capsule, .1f);
-
-                model.transform.LookAt(new Vector3(hit.point.x, model.transform.position.y, hit.point.z));
-            }
-
-            if (atkAction.WasPerformedThisFrame())
-            {
-                anim.SetBool("isAiming", false);
-                anim.SetBool("isThrowing", true);
-            }
+            isThrowing = true;
+            anim.SetFloat("ThrowSpeed", 1);
         }
     }
     
     void FixedUpdate()
     {
-        if (!isAiming)
-        {
-            rb.linearVelocity = new Vector3(moveValue.x * speed * Time.deltaTime, rb.linearVelocity.y, moveValue.y * speed * Time.deltaTime);
-        }
+        rb.linearVelocity = new Vector3(moveValue.x * speed * Time.deltaTime, rb.linearVelocity.y, moveValue.y * speed * Time.deltaTime);
 
         if (rb.linearVelocity.y < 0)
         {
@@ -128,28 +119,102 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    void LateUpdate()
+    {
+        if (isAiming)
+        {
+            if (!isThrowing)
+            {
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+                
+                if (Physics.Raycast(ray, out hit)) 
+                {
+                    Transform objectHit = hit.transform;
+                    bombDirection = (hit.point - bombSpawn.transform.position).normalized;
+                    throwHeadDirection = new Vector3(hit.point.x, head.transform.position.y, hit.point.z);
+                    head.transform.LookAt(throwHeadDirection);
+                }
+            }
+            else
+            {
+                head.transform.LookAt(throwHeadDirection);
+            }
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
         isGrounded = true;
-        anim.SetBool("isJumping", false);
-        anim.SetBool("isFalling", false);   
+        if (groundCount <= 0)
+        {
+            if (isRunning)
+            {
+                if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Running"))
+                {
+                    anim.CrossFadeInFixedTime("Running", .1f, 0); 
+                }
+            }
+            else
+            {
+                anim.CrossFadeInFixedTime("Jump_Land", .1f, 0);
+            }
+        }
+        groundCount += 1;
     }
 
     void OnTriggerExit(Collider other)
     {
-        isGrounded = false;
+        groundCount -= 1;
+        if (groundCount <= 0)
+        {
+            isGrounded = false;
+            if (!anim.GetNextAnimatorStateInfo(0).IsName("Jump_Start"))
+            {
+                anim.CrossFadeInFixedTime("Jump_Idle", .1f, 0);
+            }
+        }
     }
+    
 
-    public void EndAim()
+    public void StopMidThrow()
     {
-        isAiming = false;
-        model.transform.LookAt(new Vector3(model.transform.position.x + moveValue.x, model.transform.position.y, model.transform.position.z + moveValue.y));
+        if (!isThrowing && anim.GetFloat("ThrowSpeed") > 0)
+        {
+            anim.SetFloat("ThrowSpeed", 0);
+        }
     }
+    
 
-    public void EndThrow()
+    public void StopStartThrow()
     {
+        if (anim.GetFloat("ThrowSpeed") < 0)
+        {
+            anim.SetFloat("ThrowSpeed", 0);
+        }
+    }
+    
+
+    public void ResetThrow()
+    {
+        if (isThrowing)
+        {
+            anim.SetFloat("ThrowSpeed", 0);
+        }
+        isThrowing = false;
+
+        if (aimAction.IsPressed())
+        {
+            isAiming = true;
+            anim.SetFloat("ThrowSpeed", 1);
+        }
         isAiming = false;
-        anim.SetBool("isThrowing", false);
-        model.transform.LookAt(new Vector3(model.transform.position.x + moveValue.x, model.transform.position.y, model.transform.position.z + moveValue.y));
+    }
+    
+
+    public void ThrowBomb()
+    {
+        GameObject bomb = Instantiate(bombPrefab, bombSpawn.transform.position, bombSpawn.transform.rotation);
+        bomb.GetComponent<Rigidbody>().AddForce(bombDirection * 20f, ForceMode.Impulse);
     }
 }

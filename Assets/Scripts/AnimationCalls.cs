@@ -31,4 +31,16 @@ public class AnimationCalls : MonoBehaviour
     {
         script.StopMidThrow();
     }
+
+
+    private void ResetThrow()
+    {
+        script.ResetThrow();
+    }
+
+
+    private void ThrowBomb()
+    {
+        script.ThrowBomb();
+    }
 }

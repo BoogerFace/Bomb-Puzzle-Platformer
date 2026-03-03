@@ -5,6 +5,8 @@ public class PlayerMove : MonoBehaviour
 {
     public GameObject cam;
     public GameObject head;
+    public GameObject bombSpawn;
+    public GameObject bombPrefab;
 
     private InputAction moveAction;
     private Vector2 moveValue;
@@ -16,10 +18,13 @@ public class PlayerMove : MonoBehaviour
     private float jumpForce = 12f;
     private float jumpMult = 2f;
     private bool isGrounded = false;
-    private bool isAiming = false;
     private bool isRunning = false;
+    private bool isAiming = false;
+    private bool isThrowing = false;
     private Vector3 lookDirection;
     private int groundCount = 0;
+    private Vector3 throwHeadDirection;
+    private Vector3 bombDirection;
 
     private Rigidbody rb;
     private Animator anim;
@@ -75,22 +80,28 @@ public class PlayerMove : MonoBehaviour
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         }
         
-        if (aimAction.WasPressedThisFrame())
+        if (aimAction.WasPressedThisFrame() && !isThrowing)
         {
             anim.SetFloat("ThrowSpeed", 1);
         }
-        else if (aimAction.WasReleasedThisFrame())
+        else if (aimAction.WasReleasedThisFrame() && !isThrowing)
         {
             anim.SetFloat("ThrowSpeed", -1);
         }
 
-        if (aimAction.IsPressed())
+        if (aimAction.IsPressed() && !isThrowing)
         {
             isAiming = true;
         }
-        else
+        else if (!isThrowing)
         {
             isAiming = false;
+        }
+        
+        if (throwAction.WasPressedThisFrame() && isAiming)
+        {
+            isThrowing = true;
+            anim.SetFloat("ThrowSpeed", 1);
         }
     }
     
@@ -112,15 +123,22 @@ public class PlayerMove : MonoBehaviour
     {
         if (isAiming)
         {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            
-            if (Physics.Raycast(ray, out hit)) 
+            if (!isThrowing)
             {
-                print(hit.point);
-                Transform objectHit = hit.transform;
-
-                head.transform.LookAt(new Vector3(hit.point.x, head.transform.position.y, hit.point.z));
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+                
+                if (Physics.Raycast(ray, out hit)) 
+                {
+                    Transform objectHit = hit.transform;
+                    bombDirection = (hit.point - bombSpawn.transform.position).normalized;
+                    throwHeadDirection = new Vector3(hit.point.x, head.transform.position.y, hit.point.z);
+                    head.transform.LookAt(throwHeadDirection);
+                }
+            }
+            else
+            {
+                head.transform.LookAt(throwHeadDirection);
             }
         }
     }
@@ -161,7 +179,7 @@ public class PlayerMove : MonoBehaviour
 
     public void StopMidThrow()
     {
-        if (anim.GetFloat("ThrowSpeed") > 0)
+        if (!isThrowing && anim.GetFloat("ThrowSpeed") > 0)
         {
             anim.SetFloat("ThrowSpeed", 0);
         }
@@ -174,5 +192,29 @@ public class PlayerMove : MonoBehaviour
         {
             anim.SetFloat("ThrowSpeed", 0);
         }
+    }
+    
+
+    public void ResetThrow()
+    {
+        if (isThrowing)
+        {
+            anim.SetFloat("ThrowSpeed", 0);
+        }
+        isThrowing = false;
+
+        if (aimAction.IsPressed())
+        {
+            isAiming = true;
+            anim.SetFloat("ThrowSpeed", 1);
+        }
+        isAiming = false;
+    }
+    
+
+    public void ThrowBomb()
+    {
+        GameObject bomb = Instantiate(bombPrefab, bombSpawn.transform.position, bombSpawn.transform.rotation);
+        bomb.GetComponent<Rigidbody>().AddForce(bombDirection * 20f, ForceMode.Impulse);
     }
 }

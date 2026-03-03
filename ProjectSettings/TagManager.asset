@@ -7,6 +7,8 @@ TagManager:
   - FxTemporaire
   - Destructible
   - MegaBomb
+  - SmallBomb
+  - SmallDestructible
   layers:
   - Default
   - TransparentFX

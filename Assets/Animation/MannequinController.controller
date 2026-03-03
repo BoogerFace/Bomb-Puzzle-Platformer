@@ -47,7 +47,7 @@ AnimatorState:
   m_SpeedParameter: ThrowSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_TimeParameter: ThrowSpeed
 --- !u!1107 &-6025268430239694237
 AnimatorStateMachine:
   serializedVersion: 6

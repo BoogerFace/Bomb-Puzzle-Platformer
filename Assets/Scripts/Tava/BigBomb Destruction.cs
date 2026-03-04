@@ -12,6 +12,8 @@ public class Box : MonoBehaviour
     [Header("Cleanup")]
     public float despawnTime = 2f;
 
+    public bool isBig = false;
+
     private void Awake()
     {
         gameObject.tag = "Destructible";

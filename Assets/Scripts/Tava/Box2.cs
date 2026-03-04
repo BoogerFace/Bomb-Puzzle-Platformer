@@ -9,7 +9,7 @@ public class SmallDestructable : MonoBehaviour
 
     private void Awake()
     {
-        gameObject.tag = "SmallDestructible";
+        gameObject.tag = "Destructible";
     }
 
     private void OnDestroy()

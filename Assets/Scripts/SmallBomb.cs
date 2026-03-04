@@ -13,21 +13,6 @@ public class SmallBomb : MonoBehaviour
 
     private bool exploded = false;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     public void Explode()
     {
         if (exploded)
@@ -35,7 +20,8 @@ public class SmallBomb : MonoBehaviour
 
         exploded = true;
 
-        // Spawn particle effect
+        Debug.Log("Small bomb exploded!");
+
         if (explosionParticlePrefab != null)
         {
             GameObject effect = Instantiate(
@@ -47,13 +33,12 @@ public class SmallBomb : MonoBehaviour
             effect.transform.localScale = Vector3.one * explosionRadius;
         }
 
-        Collider[] hits = Physics.OverlapSphere(
-            transform.position,
-            explosionRadius
-        );
+        Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius);
 
         foreach (Collider hit in hits)
         {
+            Debug.Log("Hit: " + hit.gameObject.name + " Tag: " + hit.gameObject.tag);
+
             if (hit.CompareTag(destructibleTag))
             {
                 Destroy(hit.gameObject);
@@ -70,7 +55,6 @@ public class SmallBomb : MonoBehaviour
         Destroy(gameObject);
     }
 
-    
     void OnTriggerEnter(Collider other)
     {
         if (!other.gameObject.CompareTag("Player"))

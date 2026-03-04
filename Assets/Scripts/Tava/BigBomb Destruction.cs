@@ -2,18 +2,22 @@ using UnityEngine;
 
 public class Box : MonoBehaviour
 {
+    [Header("Broken Version")]
     public GameObject brokenPrefab;
+
+    [Header("Explosion Settings")]
     public float pieceForce = 6f;
     public float pieceRadius = 2f;
-    public float despawnTime = 2f;
-    public string destructibleTag;
 
-    void Awake()
+    [Header("Cleanup")]
+    public float despawnTime = 2f;
+
+    private void Awake()
     {
-        gameObject.tag = destructibleTag;
+        gameObject.tag = "Destructible";
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         if (!Application.isPlaying)
             return;
@@ -27,7 +31,7 @@ public class Box : MonoBehaviour
 
         foreach (Rigidbody rb in pieces)
         {
-            rb.AddExplosionForce(pieceForce, transform.position, pieceRadius);
+            rb.AddExplosionForce(pieceForce, transform.position, pieceRadius, 0.2f, ForceMode.Impulse);
         }
 
         Destroy(broken, despawnTime);

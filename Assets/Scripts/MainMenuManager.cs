@@ -5,29 +5,29 @@ using UnityEngine.UI;
 public class MainMenuManager : MonoBehaviour
 {
     [Header("Scene Settings")]
-    public string gameSceneName = "GameScene";   // Name of your game scene
+    public string gameSceneName = "GameScene";
 
     [Header("UI References")]
     public GameObject optionsPanel;
 
     [Header("Audio References")]
     public AudioSource musicSource;
-    public AudioSource sfxSource;
 
     [Header("Audio Sliders")]
     public Slider musicSlider;
     public Slider sfxSlider;
 
+    [Header("Slider Sound")]
+    public AudioClip sliderTickSound;
+
     void Start()
     {
-        // Hide options panel at start
         optionsPanel.SetActive(false);
 
-        // Set slider default values
-        musicSlider.value = musicSource.volume;
-        sfxSlider.value = sfxSource.volume;
+        // Set slider values WITHOUT triggering sound spam
+        musicSlider.SetValueWithoutNotify(musicSource.volume);
+        sfxSlider.SetValueWithoutNotify(SFXManager.instance.GetVolume());
 
-        // Add listeners
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
     }
@@ -66,6 +66,9 @@ public class MainMenuManager : MonoBehaviour
     // SFX VOLUME
     public void SetSFXVolume(float volume)
     {
-        sfxSource.volume = volume;
+        SFXManager.instance.SetVolume(volume);
+
+        // Play feedback sound at NEW volume
+        SFXManager.instance.PlaySound(sliderTickSound);
     }
 }

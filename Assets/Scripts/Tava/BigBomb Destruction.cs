@@ -6,10 +6,11 @@ public class Box : MonoBehaviour
     public float pieceForce = 6f;
     public float pieceRadius = 2f;
     public float despawnTime = 2f;
+    public string destructibleTag;
 
     void Awake()
     {
-        gameObject.tag = "Destructible";
+        gameObject.tag = destructibleTag;
     }
 
     void OnDestroy()

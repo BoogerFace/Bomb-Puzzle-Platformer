@@ -88,7 +88,7 @@ MonoBehaviour:
   pieceForce: 6
   pieceRadius: 2
   despawnTime: 2
-  destructibleTag: Destructible
+  isBig: 1
 --- !u!65 &5391904291001113723
 BoxCollider:
   m_ObjectHideFlags: 0

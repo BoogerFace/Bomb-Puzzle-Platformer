@@ -126,7 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   explosionRadius: 1
   explosionParticlePrefab: {fileID: 8194992990867289339, guid: 99bc28c0d45f51c4fbac01080b73edc7, type: 3}
-  destructibleTag: SmallDestructible
+  destructibleTag: Destructible
 --- !u!54 &-2125418086486573440
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class SmallBomb : MonoBehaviour
     public GameObject explosionParticlePrefab;
 
     [Header("Destruction")]
-    public string destructibleTag = "SmallDestructible";
+    public string destructibleTag = "Destructible";
 
     private bool exploded = false;
 
@@ -41,7 +41,10 @@ public class SmallBomb : MonoBehaviour
 
             if (hit.CompareTag(destructibleTag))
             {
-                Destroy(hit.gameObject);
+                if (!hit.gameObject.GetComponent<Box>().isBig)
+                {
+                    Destroy(hit.gameObject);
+                }
             }
 
             Rigidbody rb = hit.attachedRigidbody;

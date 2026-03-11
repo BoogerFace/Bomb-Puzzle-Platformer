@@ -19,7 +19,7 @@ public class PushBlock : MonoBehaviour
             return;
 
         // Direction from player to block
-        Vector3 pushDirection = transform.position - collision.transform.position;
+        Vector3 pushDirection = transform.localPosition - collision.transform.localPosition;
 
         pushDirection.y = 0;
         pushDirection.Normalize();
@@ -31,10 +31,10 @@ public class PushBlock : MonoBehaviour
 
     void TryMove(Vector3 direction)
     {
-        Vector3 targetPosition = transform.position + direction * moveDistance;
+        Vector3 targetPosition = transform.localPosition + direction * moveDistance;
 
         // Check if path is blocked
-        if (Physics.Raycast(transform.position, direction, moveDistance, obstacleLayer))
+        if (Physics.Raycast(transform.localPosition, direction, moveDistance, obstacleLayer))
             return;
 
         StartCoroutine(MoveBlock(targetPosition));
@@ -44,17 +44,17 @@ public class PushBlock : MonoBehaviour
     {
         isMoving = true;
 
-        Vector3 start = transform.position;
+        Vector3 start = transform.localPosition;
         float t = 0;
 
         while (t < 1)
         {
             t += Time.deltaTime * moveSpeed;
-            transform.position = Vector3.Lerp(start, target, t);
+            transform.localPosition = Vector3.Lerp(start, target, t);
             yield return null;
         }
 
-        transform.position = target;
+        transform.localPosition = target;
         isMoving = false;
     }
 

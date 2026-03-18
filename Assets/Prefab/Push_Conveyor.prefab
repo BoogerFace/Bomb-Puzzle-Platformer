@@ -102,19 +102,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.92387956
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.00000007525954
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.38268343
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000031173524
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -134,7 +134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_Name
-      value: bricks_A
+      value: Push_Conveyor
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_TagString
@@ -153,6 +153,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3849507659367975805}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2394611432805738397}
   m_SourcePrefab: {fileID: 100100000, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
 --- !u!4 &4620655862305235025 stripped
 Transform:
@@ -212,3 +215,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 2.0000002, z: 2.0000002}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2394611432805738397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5427979574677338859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b8ce75deb31ead43af9ce84e6ee5fd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PushBlock
+  moveDistance: 2
+  moveSpeed: 4
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0

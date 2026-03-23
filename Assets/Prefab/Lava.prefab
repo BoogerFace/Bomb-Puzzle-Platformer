@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 669d062950c9da64f960c836f5f293fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Lava
-  destroyDelayBomb: 3
+  destroyDelayBomb: 2
   destroyDelayPlatform: 10
   megaBombTag: MegaBomb
   destructibleTag: Destructible
@@ -123,5 +123,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.0111458, y: 0.761313, z: 2.0113523}
-  m_Center: {x: -0.00007998943, y: 0.87498856, z: -0.000007271761}
+  m_Size: {x: 2.0111458, y: 1.886313, z: 2.0113523}
+  m_Center: {x: -0.00007998943, y: 0.062488556, z: -0.0000072717667}

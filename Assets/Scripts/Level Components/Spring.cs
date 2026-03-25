@@ -8,12 +8,14 @@ public class Spring : MonoBehaviour
     [SerializeField] private Vector3 launchDirection = Vector3.up;
     [SerializeField] private bool overrideVelocity = true;
 
-    [Header("Layer Filtering")]
-    [SerializeField] private LayerMask launchableLayers;
-
-    [Header("Blocking Check")]
+    [Header("Detection")]
     [SerializeField] private float checkDistance = 1.2f;
+    [SerializeField] private LayerMask launchableLayers;
     [SerializeField] private LayerMask blockingLayers;
+
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private string boolName = "IsBouncing";
 
     [Header("Cooldown")]
     [SerializeField] private float cooldown = 0.3f;
@@ -24,35 +26,74 @@ public class Spring : MonoBehaviour
         if (!canLaunch)
             return;
 
-        // ✅ Only affect allowed layers (e.g. MegaBomb)
-        if (!IsInLayerMask(collision.gameObject.layer, launchableLayers))
-            return;
-
-        Rigidbody rb = collision.rigidbody;
-        if (rb == null)
-            return;
-
         Vector3 direction = transform.TransformDirection(launchDirection.normalized);
+        Vector3 origin = transform.position + direction * 0.2f;
 
-        // ✅ Check if something is blocking immediately in front
-        if (Physics.Raycast(transform.position, direction, checkDistance, blockingLayers))
-        {
-            Debug.Log("Spring blocked — not launching");
-            return;
-        }
+        Debug.DrawRay(origin, direction * checkDistance, Color.yellow, 1f);
 
-        // ✅ Apply launch
-        if (overrideVelocity)
+        RaycastHit hit;
+        if (Physics.Raycast(origin, direction, out hit, checkDistance))
         {
-            rb.linearVelocity = direction * launchForce;
+            GameObject hitObject = hit.collider.gameObject;
+
+            Debug.Log("Raycast HIT: " + hitObject.name);
+
+            // 🚧 BLOCK CHECK
+            if (IsInLayerMask(hitObject.layer, blockingLayers))
+            {
+                Debug.Log("❌ BLOCKED");
+                SetBounce(false);
+                return;
+            }
+
+            // 🎯 LAUNCHABLE CHECK
+            if (!IsInLayerMask(hitObject.layer, launchableLayers))
+            {
+                Debug.Log("⚠️ Not launchable");
+                SetBounce(false);
+                return;
+            }
+
+            Rigidbody rb = hitObject.GetComponent<Rigidbody>();
+            if (rb == null)
+            {
+                SetBounce(false);
+                return;
+            }
+
+            // 🚀 LAUNCH
+            if (overrideVelocity)
+                rb.linearVelocity = direction * launchForce;
+            else
+                rb.AddForce(direction * launchForce, ForceMode.VelocityChange);
+
+            Debug.Log("✅ Launch + Animation");
+
+            // 🎬 SET BOOL TRUE
+            SetBounce(true);
+
+            StartCoroutine(ResetBounce());
+            StartCoroutine(CooldownRoutine());
         }
         else
         {
-            rb.AddForce(direction * launchForce, ForceMode.VelocityChange);
+            Debug.Log("❌ Nothing detected");
+            SetBounce(false);
         }
+    }
 
-        // ✅ Start cooldown
-        StartCoroutine(CooldownRoutine());
+    private void SetBounce(bool state)
+    {
+        if (animator != null)
+        {
+            animator.SetBool(boolName, state);
+        }
+    }
+
+    private IEnumerator ResetBounce()
+    {
+        yield return new WaitForSeconds(0.2f); // match animation timing
+        SetBounce(false);
     }
 
     private IEnumerator CooldownRoutine()
@@ -62,18 +103,27 @@ public class Spring : MonoBehaviour
         canLaunch = true;
     }
 
-    // ✅ Layer check helper
     private bool IsInLayerMask(int layer, LayerMask mask)
     {
         return (mask.value & (1 << layer)) != 0;
     }
 
-    // ✅ Debug visualization in Scene view
     private void OnDrawGizmos()
     {
+        Vector3 direction = transform.TransformDirection(launchDirection.normalized);
+        Vector3 origin = transform.position + direction * 0.2f;
+
         Gizmos.color = Color.yellow;
 
-        Vector3 direction = transform.TransformDirection(launchDirection.normalized);
-        Gizmos.DrawLine(transform.position, transform.position + direction * checkDistance);
+        RaycastHit hit;
+        if (Physics.Raycast(origin, direction, out hit, checkDistance))
+        {
+            if (IsInLayerMask(hit.collider.gameObject.layer, blockingLayers))
+                Gizmos.color = Color.red;
+            else if (IsInLayerMask(hit.collider.gameObject.layer, launchableLayers))
+                Gizmos.color = Color.green;
+        }
+
+        Gizmos.DrawLine(origin, origin + direction * checkDistance);
     }
 }

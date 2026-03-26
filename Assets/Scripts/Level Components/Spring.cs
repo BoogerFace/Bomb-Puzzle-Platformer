@@ -21,67 +21,71 @@ public class Spring : MonoBehaviour
     [SerializeField] private float cooldown = 0.3f;
     private bool canLaunch = true;
 
-    private void OnCollisionEnter(Collision collision)
+
+    void Update()
     {
         if (!canLaunch)
             return;
 
+        CheckForLaunchable();
+    }
+
+    void CheckForLaunchable()
+    {
         Vector3 direction = transform.TransformDirection(launchDirection.normalized);
         Vector3 origin = transform.position + direction * 0.2f;
 
-        Debug.DrawRay(origin, direction * checkDistance, Color.yellow, 1f);
+        Debug.DrawRay(origin, direction * checkDistance, Color.yellow);
 
         RaycastHit hit;
         if (Physics.Raycast(origin, direction, out hit, checkDistance))
         {
             GameObject hitObject = hit.collider.gameObject;
 
-            Debug.Log("Raycast HIT: " + hitObject.name);
-
-            // 🚧 BLOCK CHECK
+            // 🚧 BLOCKED
             if (IsInLayerMask(hitObject.layer, blockingLayers))
             {
-                Debug.Log("❌ BLOCKED");
                 SetBounce(false);
                 return;
             }
 
-            // 🎯 LAUNCHABLE CHECK
-            if (!IsInLayerMask(hitObject.layer, launchableLayers))
+            // 🎯 VALID TARGET
+            if (IsInLayerMask(hitObject.layer, launchableLayers))
             {
-                Debug.Log("⚠️ Not launchable");
-                SetBounce(false);
-                return;
+                SetBounce(true);
             }
-
-            Rigidbody rb = hitObject.GetComponent<Rigidbody>();
-            if (rb == null)
-            {
-                SetBounce(false);
-                return;
-            }
-
-            // 🚀 LAUNCH
-            if (overrideVelocity)
-                rb.linearVelocity = direction * launchForce;
             else
-                rb.AddForce(direction * launchForce, ForceMode.VelocityChange);
-
-            Debug.Log("✅ Launch + Animation");
-
-            // 🎬 SET BOOL TRUE
-            SetBounce(true);
-
-            StartCoroutine(ResetBounce());
-            StartCoroutine(CooldownRoutine());
+            {
+                SetBounce(false);
+            }
         }
         else
         {
-            Debug.Log("❌ Nothing detected");
             SetBounce(false);
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!canLaunch)
+            return;
+
+        if (!IsInLayerMask(collision.gameObject.layer, launchableLayers))
+            return;
+
+        Rigidbody rb = collision.rigidbody;
+        if (rb == null)
+            return;
+
+        Vector3 direction = transform.TransformDirection(launchDirection.normalized);
+
+        if (overrideVelocity)
+            rb.linearVelocity = direction * launchForce;
+        else
+            rb.AddForce(direction * launchForce, ForceMode.VelocityChange);
+
+        StartCoroutine(CooldownRoutine());
+    }
     private void SetBounce(bool state)
     {
         if (animator != null)

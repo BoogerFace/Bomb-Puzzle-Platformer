@@ -43,4 +43,10 @@ public class AnimationCalls : MonoBehaviour
     {
         script.ThrowBomb();
     }
+
+
+    private void Reset()
+    {
+        script.Reset();
+    }
 }

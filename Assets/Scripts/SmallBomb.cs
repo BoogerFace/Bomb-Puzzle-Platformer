@@ -10,6 +10,8 @@ public class SmallBomb : MonoBehaviour
 
     [Header("Destruction")]
     public string destructibleTag = "Destructible";
+    
+    private string targetTag = "Targets";
 
     private bool exploded = false;
 
@@ -39,6 +41,7 @@ public class SmallBomb : MonoBehaviour
         {
             Debug.Log("Hit: " + hit.gameObject.name + " Tag: " + hit.gameObject.tag);
 
+            // Break Destructible
             if (hit.CompareTag(destructibleTag))
             {
                 if (!hit.gameObject.GetComponent<Box>().isBig)
@@ -47,11 +50,23 @@ public class SmallBomb : MonoBehaviour
                 }
             }
 
-            Rigidbody rb = hit.attachedRigidbody;
-            if (rb != null)
+            // Knockback for bomb jump
+            // Rigidbody rb = hit.attachedRigidbody;
+            // if (rb != null)
+            // {
+            //     Vector3 dir = (hit.transform.position - transform.position).normalized;
+            //     rb.AddForce(dir * 8f, ForceMode.Impulse);
+            // }
+
+            // Trigger Targets
+            if (hit.CompareTag(targetTag))
             {
-                Vector3 dir = (hit.transform.position - transform.position).normalized;
-                rb.AddForce(dir * 8f, ForceMode.Impulse);
+                print("Hit Target");
+                TargetTrigger targetScript = hit.GetComponent<TargetTrigger>();
+                if (targetScript != null)
+                {
+                    targetScript.Trigger();
+                }
             }
         }
 

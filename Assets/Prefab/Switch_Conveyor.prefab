@@ -77,30 +77,19 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d58c50b6528f8ee43a7004dca3a4ad98, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 4438729611282505066}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d58c50b6528f8ee43a7004dca3a4ad98, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 524837535162083189}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d58c50b6528f8ee43a7004dca3a4ad98, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4438729611282505066}
+      addedObject: {fileID: 4917136908345226663}
   m_SourcePrefab: {fileID: 100100000, guid: d58c50b6528f8ee43a7004dca3a4ad98, type: 3}
 --- !u!1 &286569991874423056 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: d58c50b6528f8ee43a7004dca3a4ad98, type: 3}
   m_PrefabInstance: {fileID: 1097594295537046593}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &524837535162083189
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 286569991874423056}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3aa25aa1b8067c5479d06721cd007614, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ConveyorBelt
-  moveDirection: {x: 1, y: 0, z: 0}
-  speed: 2
 --- !u!65 &4438729611282505066
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -122,6 +111,36 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 2.0000002, z: 2.0000002}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &524837535162083189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 286569991874423056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3aa25aa1b8067c5479d06721cd007614, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConveyorBelt
+  moveDirection: {x: 1, y: 0, z: 0}
+  speed: 2
+  allowedTags:
+  - MegaBomb
+  - Destructible
+  - Player
+--- !u!114 &4917136908345226663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 286569991874423056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a0baa0cc33644a428b42bd0f8535133, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwitchConveyor
 --- !u!4 &626503165164286890 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d58c50b6528f8ee43a7004dca3a4ad98, type: 3}

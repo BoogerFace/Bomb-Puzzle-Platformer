@@ -137,7 +137,7 @@ public class Lava : MonoBehaviour
 
                 );
                 Debug.Log("Spawning lava effect at: " + spawnPos);
-                Destroy(fx, 2f); // clean up effect
+                Destroy(fx, 2f); 
             }
 
             Destroy(target);

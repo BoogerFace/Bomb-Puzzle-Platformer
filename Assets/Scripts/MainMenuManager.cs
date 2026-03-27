@@ -5,37 +5,69 @@ using UnityEngine.UI;
 public class MainMenuManager : MonoBehaviour
 {
     [Header("Scene Settings")]
-    public string gameSceneName = "GameScene";   // Name of your game scene
+    public string level1 = "Level1";
+    public string level2 = "Level2";
+    public string level3 = "Level3";
+    public string level4 = "Level4";
 
     [Header("UI References")]
     public GameObject optionsPanel;
+    public GameObject levelsPanel;
 
     [Header("Audio References")]
     public AudioSource musicSource;
-    public AudioSource sfxSource;
 
     [Header("Audio Sliders")]
     public Slider musicSlider;
     public Slider sfxSlider;
 
+    [Header("Slider Sound")]
+    public AudioClip sliderTickSound;
+
     void Start()
     {
-        // Hide options panel at start
         optionsPanel.SetActive(false);
+        levelsPanel.SetActive(false);
 
-        // Set slider default values
-        musicSlider.value = musicSource.volume;
-        sfxSlider.value = sfxSource.volume;
+        // Set slider values WITHOUT triggering sound spam
+        musicSlider.SetValueWithoutNotify(musicSource.volume);
+        sfxSlider.SetValueWithoutNotify(SFXManager.instance.GetVolume());
 
-        // Add listeners
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
     }
 
-    // PLAY BUTTON
+    // PLAY BUTTON (OPEN LEVELS PANEL)
     public void PlayGame()
     {
-        SceneManager.LoadScene(gameSceneName);
+        levelsPanel.SetActive(true);
+    }
+
+    // CLOSE LEVELS PANEL
+    public void CloseLevels()
+    {
+        levelsPanel.SetActive(false);
+    }
+
+    // LEVEL BUTTONS
+    public void LoadLevel1()
+    {
+        SceneManager.LoadScene(level1);
+    }
+
+    public void LoadLevel2()
+    {
+        SceneManager.LoadScene(level2);
+    }
+
+    public void LoadLevel3()
+    {
+        SceneManager.LoadScene(level3);
+    }
+
+    public void LoadLevel4()
+    {
+        SceneManager.LoadScene(level4);
     }
 
     // OPTIONS BUTTON
@@ -66,6 +98,11 @@ public class MainMenuManager : MonoBehaviour
     // SFX VOLUME
     public void SetSFXVolume(float volume)
     {
-        sfxSource.volume = volume;
+        SFXManager.instance.SetVolume(volume);
+    }
+
+    public void PlaySliderReleaseSound()
+    {
+        SFXManager.instance.PlaySound(sliderTickSound);
     }
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MegaBomb : MonoBehaviour
+public class MegaBomb : TriggerableObject
 {
     [Header("Explosion Settings")]
     public float explosionRadius = 3f;
@@ -69,5 +69,12 @@ public class MegaBomb : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, explosionRadius);
+    }
+
+    // Called when a Trigger is activated
+    public override void Triggered()
+    {
+        Explode();
+        print("Mega Bomb Script Triggered!");
     }
 }

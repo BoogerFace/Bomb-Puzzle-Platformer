@@ -13,6 +13,7 @@ public class PlayerMove : MonoBehaviour
     private InputAction jumpAction;
     private InputAction aimAction;
     private InputAction throwAction;
+    private InputAction interactAction;
 
     private float speed = 300f;
     private float jumpForce = 12f;
@@ -21,6 +22,7 @@ public class PlayerMove : MonoBehaviour
     private bool isRunning = false;
     private bool isAiming = false;
     private bool isThrowing = false;
+    private bool isInteracting = false;
     private Vector3 lookDirection;
     private int groundCount = 0;
     private Vector3 throwHeadDirection;
@@ -30,6 +32,9 @@ public class PlayerMove : MonoBehaviour
     private Animator anim;
     private GameObject model;
     private GameObject hitbox;
+    
+    [HideInInspector] public bool canInteract = false;
+    public GameObject currentInteractable;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -43,6 +48,7 @@ public class PlayerMove : MonoBehaviour
         jumpAction = InputSystem.actions.FindAction("Jump");
         aimAction = InputSystem.actions.FindAction("Aim");
         throwAction = InputSystem.actions.FindAction("Attack");
+        interactAction = InputSystem.actions.FindAction("Interact");
 
         lookDirection = model.transform.forward;
     }
@@ -51,17 +57,8 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         moveValue = moveAction.ReadValue<Vector2>();
-
-        if (moveAction.WasPressedThisFrame() && isGrounded)
-        {
-            anim.CrossFadeInFixedTime("Running", .1f, 0);
-        }
-        else if (moveAction.WasReleasedThisFrame() && isGrounded)
-        {
-            anim.CrossFadeInFixedTime("Idle", .1f, 0);
-        }
         
-        if (moveAction.IsPressed())
+        if (moveAction.IsPressed() && !isInteracting)
         {
             isRunning = true;
             lookDirection = Vector3.RotateTowards(lookDirection, new Vector3(moveValue.x, 0, moveValue.y), 15f * Time.deltaTime, 0f);
@@ -71,43 +68,68 @@ public class PlayerMove : MonoBehaviour
         {
             isRunning = false;
         }
-        
-        if (jumpAction.WasPressedThisFrame() && isGrounded)
+
+        if (!isInteracting)
         {
-            anim.CrossFadeInFixedTime("Jump_Start", .1f, 0);
-            isGrounded = false;
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-        }
-        
-        if (aimAction.WasPressedThisFrame() && !isThrowing)
-        {
-            anim.SetFloat("ThrowSpeed", 1);
-        }
-        else if (aimAction.WasReleasedThisFrame() && !isThrowing)
-        {
-            anim.SetFloat("ThrowSpeed", -1);
+            if (moveAction.WasPressedThisFrame() && isGrounded)
+            {
+                anim.CrossFadeInFixedTime("Running", .1f, 0);
+            }
+            else if (moveAction.WasReleasedThisFrame() && isGrounded)
+            {
+                anim.CrossFadeInFixedTime("Idle", .1f, 0);
+            }
+            
+            if (jumpAction.WasPressedThisFrame() && isGrounded)
+            {
+                anim.CrossFadeInFixedTime("Jump_Start", .1f, 0);
+                isGrounded = false;
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+                rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            }
+
+            // if (aimAction.IsPressed() && !isThrowing)
+            // {
+            // }
+            // else if (!isThrowing)
+            // {
+            // }
+            
+            if (aimAction.WasPressedThisFrame() && !isAiming && !isThrowing)
+            {
+                print("asdd");
+                isAiming = true;
+                anim.SetFloat("ThrowSpeed", 1);
+            }
+            else if (aimAction.WasReleasedThisFrame() && isAiming && !isThrowing)
+            {
+                isAiming = false;
+                anim.SetFloat("ThrowSpeed", -1);
+            }
+            
+            if (throwAction.WasPressedThisFrame() && isAiming)
+            {
+                isThrowing = true;
+                anim.SetFloat("ThrowSpeed", 1);
+            }
         }
 
-        if (aimAction.IsPressed() && !isThrowing)
+        if (interactAction.WasPressedThisFrame() && canInteract && isGrounded && !isAiming && !isThrowing && !isInteracting)
         {
-            isAiming = true;
-        }
-        else if (!isThrowing)
-        {
-            isAiming = false;
-        }
-        
-        if (throwAction.WasPressedThisFrame() && isAiming)
-        {
-            isThrowing = true;
-            anim.SetFloat("ThrowSpeed", 1);
+            isInteracting = true;
+            rb.linearVelocity = new Vector3(0,0,0);
+            model.transform.LookAt(new Vector3(currentInteractable.transform.position.x, model.transform.position.y, currentInteractable.transform.position.z));
+            anim.CrossFadeInFixedTime("Interact", .1f, 0);
+            currentInteractable.GetComponent<LeverTrigger>().Trigger();
         }
     }
     
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector3(moveValue.x * speed * Time.deltaTime, rb.linearVelocity.y, moveValue.y * speed * Time.deltaTime);
+        if (!isInteracting)
+        {
+            rb.linearVelocity = new Vector3(moveValue.x * speed * Time.deltaTime, rb.linearVelocity.y, moveValue.y * speed * Time.deltaTime);
+        }
 
         if (rb.linearVelocity.y < 0)
         {
@@ -199,16 +221,19 @@ public class PlayerMove : MonoBehaviour
     {
         if (isThrowing)
         {
+            isThrowing = false;
             anim.SetFloat("ThrowSpeed", 0);
-        }
-        isThrowing = false;
 
-        if (aimAction.IsPressed())
-        {
-            isAiming = true;
-            anim.SetFloat("ThrowSpeed", 1);
+            if (aimAction.IsPressed())
+            {
+                isAiming = true;
+                anim.SetFloat("ThrowSpeed", 1);
+            }
+            else
+            {
+                isAiming = false;
+            }
         }
-        isAiming = false;
     }
     
 
@@ -216,5 +241,19 @@ public class PlayerMove : MonoBehaviour
     {
         GameObject bomb = Instantiate(bombPrefab, bombSpawn.transform.position, bombSpawn.transform.rotation);
         bomb.GetComponent<Rigidbody>().AddForce(bombDirection * 20f, ForceMode.Impulse);
+    }
+    
+
+    public void Reset()
+    {
+        isInteracting = false;
+        if (moveAction.IsPressed())
+        {
+            anim.CrossFadeInFixedTime("Running", .1f, 0);
+        }
+        else
+        {
+            anim.CrossFadeInFixedTime("Idle", .1f, 0);
+        }
     }
 }

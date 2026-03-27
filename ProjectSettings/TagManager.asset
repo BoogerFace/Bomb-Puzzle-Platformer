@@ -9,6 +9,7 @@ TagManager:
   - MegaBomb
   - SmallBomb
   - SmallDestructible
+  - Targets
   layers:
   - Default
   - TransparentFX

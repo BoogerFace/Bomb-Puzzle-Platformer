@@ -104,6 +104,7 @@ MonoBehaviour:
   destroyDelayPlatform: 10
   megaBombTag: MegaBomb
   destructibleTag: Destructible
+  lavaEffect: {fileID: 6294508013172393196, guid: 043176b6a68be2b43b073aaaa4782c7d, type: 3}
 --- !u!65 &5509895126404270489
 BoxCollider:
   m_ObjectHideFlags: 0

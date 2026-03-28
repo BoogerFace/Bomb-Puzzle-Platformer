@@ -52,7 +52,7 @@ public class MainMenuManager : MonoBehaviour
     // LEVEL BUTTONS
     public void LoadLevel1()
     {
-        SceneManager.LoadScene(level1);
+        SceneManager.LoadSceneAsync(level1);
     }
 
     public void LoadLevel2()

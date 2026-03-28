@@ -21,7 +21,16 @@ public class Spring : MonoBehaviour
     [SerializeField] private float cooldown = 0.3f;
     private bool canLaunch = true;
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip springSound;
 
+    void Start()
+    {
+        if (animator == null)
+            animator = GetComponent<Animator>();
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+    }
     void Update()
     {
         if (!canLaunch)
@@ -84,6 +93,8 @@ public class Spring : MonoBehaviour
         else
             rb.AddForce(direction * launchForce, ForceMode.VelocityChange);
 
+        PlaySpringSound();
+
         StartCoroutine(CooldownRoutine());
     }
     private void SetBounce(bool state)
@@ -91,6 +102,14 @@ public class Spring : MonoBehaviour
         if (animator != null)
         {
             animator.SetBool(boolName, state);
+        }
+    }
+
+    private void PlaySpringSound()
+    {
+        if (audioSource != null && springSound != null)
+        {
+            audioSource.PlayOneShot(springSound);
         }
     }
 

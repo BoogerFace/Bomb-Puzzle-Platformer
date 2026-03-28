@@ -17,20 +17,15 @@ public class Spring : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private string boolName = "IsBouncing";
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip springSound;
+    [SerializeField] private Vector2 pitchRange = new Vector2(0.9f, 1.1f);
+
     [Header("Cooldown")]
     [SerializeField] private float cooldown = 0.3f;
     private bool canLaunch = true;
 
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip springSound;
-
-    void Start()
-    {
-        if (animator == null)
-            animator = GetComponent<Animator>();
-        if (audioSource == null)
-            audioSource = GetComponent<AudioSource>();
-    }
     void Update()
     {
         if (!canLaunch)
@@ -88,15 +83,37 @@ public class Spring : MonoBehaviour
 
         Vector3 direction = transform.TransformDirection(launchDirection.normalized);
 
+        // 🚀 APPLY LAUNCH
         if (overrideVelocity)
             rb.linearVelocity = direction * launchForce;
         else
             rb.AddForce(direction * launchForce, ForceMode.VelocityChange);
 
+        // 🎬 PLAY ANIMATION
+        SetBounce(true);
+        StartCoroutine(ResetBounce());
+
+        // 🔊 PLAY SOUND (with improvements)
         PlaySpringSound();
 
         StartCoroutine(CooldownRoutine());
     }
+
+    private void PlaySpringSound()
+    {
+        if (audioSource != null && springSound != null)
+        {
+            // 🎵 Prevent sound spam
+            if (audioSource.isPlaying)
+                return;
+
+            // 🎵 Random pitch variation
+            audioSource.pitch = Random.Range(pitchRange.x, pitchRange.y);
+
+            audioSource.PlayOneShot(springSound);
+        }
+    }
+
     private void SetBounce(bool state)
     {
         if (animator != null)
@@ -105,17 +122,9 @@ public class Spring : MonoBehaviour
         }
     }
 
-    private void PlaySpringSound()
-    {
-        if (audioSource != null && springSound != null)
-        {
-            audioSource.PlayOneShot(springSound);
-        }
-    }
-
     private IEnumerator ResetBounce()
     {
-        yield return new WaitForSeconds(0.2f); // match animation timing
+        yield return new WaitForSeconds(0.2f);
         SetBounce(false);
     }
 

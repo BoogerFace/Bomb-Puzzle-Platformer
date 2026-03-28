@@ -122,9 +122,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b0027b2b2389224ebccad1ef0c5ae1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RespawnObject
-  prefabToSpawn: {fileID: 1532774509793188283, guid: 5ef02642c80c3274fa4d1eaac4b3e349, type: 3}
+  prefabToSpawn: {fileID: 5427979574677338859, guid: fd865e095deae03438fc77cc2c953596, type: 3}
   respawnDelay: 3
   spawnOnStart: 1
+  spawnParent: {fileID: 0}
   spawnPoint: {fileID: 7380015165455922735}
 --- !u!54 &6952985135394857607
 Rigidbody:

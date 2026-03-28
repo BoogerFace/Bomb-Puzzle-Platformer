@@ -26,6 +26,18 @@ public class Spring : MonoBehaviour
     [SerializeField] private float cooldown = 0.3f;
     private bool canLaunch = true;
 
+    private void Start()
+    {
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
+
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+    }
     void Update()
     {
         if (!canLaunch)

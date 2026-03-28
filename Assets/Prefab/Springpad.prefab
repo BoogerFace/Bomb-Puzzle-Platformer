@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2678434106605129476}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17.233992, y: 1, z: -53.999996}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
@@ -224,9 +224,10 @@ MonoBehaviour:
     m_Bits: 128
   animator: {fileID: 8659482697098935576}
   boolName: IsBouncing
+  audioSource: {fileID: 5128272193282622967}
+  springSound: {fileID: 8300000, guid: bcc28d494d37d03488cf5d33f48f138a, type: 3}
+  pitchRange: {x: 0.9, y: 1.1}
   cooldown: 0.5
-  audioSource: {fileID: 0}
-  springSound: {fileID: 0}
 --- !u!82 &5128272193282622967
 AudioSource:
   m_ObjectHideFlags: 0

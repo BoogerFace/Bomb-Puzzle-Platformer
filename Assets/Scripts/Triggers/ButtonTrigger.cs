@@ -49,7 +49,7 @@ public class ButtonTrigger : Triggers
 
     public override void Trigger()
     {
-        print("Button Script Triggered!");
+        // print("Button Script Triggered!");
         if (objectToTrigger != null)
         {
             objectToTrigger.Triggered();

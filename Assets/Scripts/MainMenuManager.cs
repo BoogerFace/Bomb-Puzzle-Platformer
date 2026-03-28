@@ -70,6 +70,15 @@ public class MainMenuManager : MonoBehaviour
         SceneManager.LoadScene(level4);
     }
 
+    // STOP MENU MUSIC
+    void StopMenuMusic()
+    {
+        if (musicSource != null)
+        {
+            musicSource.Stop();
+        }
+    }
+
     // OPTIONS BUTTON
     public void OpenOptions()
     {

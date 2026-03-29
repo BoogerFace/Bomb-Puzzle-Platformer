@@ -61,7 +61,7 @@ public class MainMenuManager : MonoBehaviour
     // LOAD LEVELS
     public void LoadLevel1()
     {
-        LoadLevel(level1);
+        SceneManager.LoadSceneAsync(level1);
     }
 
     public void LoadLevel2()

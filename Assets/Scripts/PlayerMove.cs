@@ -19,14 +19,21 @@ public class PlayerMove : MonoBehaviour
     private float speed = 300f;
     private float jumpForce = 12f;
     private float jumpMult = 2f;
+    private float groundDistance = .3f;
+    private float playerHeight = 2f;
+    private int groundCount = 0;
+
     private bool isGrounded = false;
+    private bool lastGrounded = false;
     private bool isRunning = false;
     private bool isAiming = false;
     private bool isThrowing = false;
     private bool isInteracting = false;
+    private bool isJumping = false;
     private bool isFalling = false;
+    private bool isInAir = false;
+
     private Vector3 lookDirection;
-    private int groundCount = 0;
     private Vector3 throwHeadDirection;
     private Vector3 bombDirection;
     private RaycastHit slopeHit;
@@ -59,6 +66,8 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        isGrounded = Physics.Raycast(transform.position + new Vector3(0,playerHeight*.5f,0), Vector3.down, playerHeight * .5f + groundDistance, groundLayer);
+
         moveValue = moveAction.ReadValue<Vector2>();
         
         if (moveAction.IsPressed() && !isInteracting)
@@ -83,20 +92,14 @@ public class PlayerMove : MonoBehaviour
                 anim.CrossFadeInFixedTime("Idle", .1f, 0);
             }
             
-            if (jumpAction.IsPressed() && isGrounded)
+            if (jumpAction.IsPressed() && isGrounded && !isInAir && !isJumping && !isFalling)
             {
-                isGrounded = false;
+                isInAir = true;
+                isJumping = true;
                 anim.CrossFadeInFixedTime("Jump_Start", .1f, 0);
                 rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
                 rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             }
-
-            // if (aimAction.IsPressed() && !isThrowing)
-            // {
-            // }
-            // else if (!isThrowing)
-            // {
-            // }
             
             if (aimAction.WasPressedThisFrame() && !isAiming && !isThrowing)
             {
@@ -114,6 +117,40 @@ public class PlayerMove : MonoBehaviour
                 isThrowing = true;
                 anim.SetFloat("ThrowSpeed", 1);
             }
+            
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Running") && !isRunning && !anim.GetNextAnimatorStateInfo(0).IsName("Idle"))
+            {
+                anim.CrossFadeInFixedTime("Idle", .1f, 0); 
+            }
+        }
+
+        // Falling off ledge
+        if (rb.linearVelocity.y < -5f && !isJumping && !isFalling && !isInAir)
+        {
+            print("asd");
+            isInAir = true;
+            isFalling = true;
+            anim.CrossFadeInFixedTime("Jump_Idle", .1f, 0);
+        }
+
+        // On player landing
+        if (isGrounded && !lastGrounded)
+        {
+            isInAir = false;
+            isJumping = false;
+            isFalling = false;
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+            if (isRunning)
+            {
+                if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Running"))
+                {
+                    anim.CrossFadeInFixedTime("Running", .1f, 0); 
+                }
+            }
+            else
+            {
+                anim.CrossFadeInFixedTime("Jump_Land", .1f, 0);
+            }
         }
 
         if (interactAction.WasPressedThisFrame() && canInteract && isGrounded && !isAiming && !isThrowing && !isInteracting)
@@ -124,6 +161,9 @@ public class PlayerMove : MonoBehaviour
             anim.CrossFadeInFixedTime("Interact", .1f, 0);
             currentInteractable.GetComponent<LeverTrigger>().Trigger();
         }
+
+        // Store previous Grounded state
+        lastGrounded = isGrounded;
     }
     
     void FixedUpdate()
@@ -178,57 +218,58 @@ public class PlayerMove : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        int otherObjectLayerMask = 1 << other.gameObject.layer; 
+        // int otherObjectLayerMask = 1 << other.gameObject.layer; 
 
-        // Use the bitwise AND operator to check for overlap
-        if ((groundLayer.value & otherObjectLayerMask) != 0) 
-        {
-            print(other+" entered");
-            isGrounded = true;
-            isFalling = false;
-            if (groundCount <= 0)
-            {
-                if (isRunning)
-                {
-                    if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Running"))
-                    {
-                        anim.CrossFadeInFixedTime("Running", .1f, 0); 
-                    }
-                }
-                else
-                {
-                    anim.CrossFadeInFixedTime("Jump_Land", .1f, 0);
-                }
-            }
-            groundCount += 1;
-        }
-        else
-        {
-        }
+        // // Use the bitwise AND operator to check for overlap
+        // if ((groundLayer.value & otherObjectLayerMask) != 0) 
+        // {
+        //     print(other+" entered");
+        //     isGrounded = true;
+        //     isFalling = false;
+        //     if (groundCount <= 0)
+        //     {
+        //         if (isRunning)
+        //         {
+        //             if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Running"))
+        //             {
+        //                 anim.CrossFadeInFixedTime("Running", .1f, 0); 
+        //             }
+        //         }
+        //         else
+        //         {
+        //             anim.CrossFadeInFixedTime("Jump_Land", .1f, 0);
+        //         }
+        //     }
+        //     groundCount += 1;
+        // }
+        // else
+        // {
+
+        // }
     }
 
     void OnTriggerExit(Collider other)
     {
-        int otherObjectLayerMask = 1 << other.gameObject.layer; 
+        // int otherObjectLayerMask = 1 << other.gameObject.layer; 
 
-        // Use the bitwise AND operator to check for overlap
-        if ((groundLayer.value & otherObjectLayerMask) != 0) 
-        {
-            groundCount -= 1;
-            print(other+" exited");
-            if (groundCount <= 0)
-            {
-                isGrounded = false;
-                if (!anim.GetNextAnimatorStateInfo(0).IsName("Jump_Start"))
-                {
-                    // anim.CrossFadeInFixedTime("Jump_Idle", .1f, 0);
-                }
-            }
-        }
-        else
-        {
+        // // Use the bitwise AND operator to check for overlap
+        // if ((groundLayer.value & otherObjectLayerMask) != 0) 
+        // {
+        //     groundCount -= 1;
+        //     print(other+" exited");
+        //     if (groundCount <= 0)
+        //     {
+        //         isGrounded = false;
+        //         if (!anim.GetNextAnimatorStateInfo(0).IsName("Jump_Start"))
+        //         {
+        //             // anim.CrossFadeInFixedTime("Jump_Idle", .1f, 0);
+        //         }
+        //     }
+        // }
+        // else
+        // {
 
-        }
+        // }
     }
     
 

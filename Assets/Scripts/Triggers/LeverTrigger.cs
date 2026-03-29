@@ -18,14 +18,17 @@ public class LeverTrigger : Triggers
 
     private void OnTriggerEnter(Collider other)
     {
-        GameObject playerobject = other.transform.parent.gameObject;
-        if (playerobject.CompareTag(playerTag))
+        if (other.transform.parent != null)
         {
-            PlayerMove playerScript = playerobject.GetComponent<PlayerMove>();
-            if (playerScript != null)
+            GameObject playerobject = other.transform.parent.gameObject;
+            if (playerobject.CompareTag(playerTag))
             {
-                playerScript.canInteract = true;
-                playerScript.currentInteractable = transform.gameObject;
+                PlayerMove playerScript = playerobject.GetComponent<PlayerMove>();
+                if (playerScript != null)
+                {
+                    playerScript.canInteract = true;
+                    playerScript.currentInteractable = transform.gameObject;
+                }
             }
         }
     }
@@ -33,14 +36,17 @@ public class LeverTrigger : Triggers
 
     private void OnTriggerExit(Collider other)
     {
-        GameObject playerobject = other.transform.parent.gameObject;
-        if (playerobject.CompareTag(playerTag))
+        if (other.transform.parent != null)
         {
-            PlayerMove playerScript = playerobject.GetComponent<PlayerMove>();
-            if (playerScript != null)
+            GameObject playerobject = other.transform.parent.gameObject;
+            if (playerobject.CompareTag(playerTag))
             {
-                playerScript.canInteract = false;
-                playerScript.currentInteractable = null;
+                PlayerMove playerScript = playerobject.GetComponent<PlayerMove>();
+                if (playerScript != null)
+                {
+                    playerScript.canInteract = false;
+                    playerScript.currentInteractable = null;
+                }
             }
         }
     }

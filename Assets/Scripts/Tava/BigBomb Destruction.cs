@@ -14,16 +14,19 @@ public class Box : MonoBehaviour
 
     public bool isBig = false;
 
+    private Vector3 startPosition;
+    private Quaternion startRotation;
+
     private void Awake()
     {
         gameObject.tag = "Destructible";
+
+        startPosition = transform.position;
+        startRotation = transform.rotation;
     }
 
-    private void OnDestroy()
+    public void Break()
     {
-        if (!Application.isPlaying)
-            return;
-
         if (brokenPrefab == null)
             return;
 
@@ -37,5 +40,14 @@ public class Box : MonoBehaviour
         }
 
         Destroy(broken, despawnTime);
+
+        gameObject.SetActive(false);
+    }
+
+    public void ResetObject()
+    {
+        gameObject.SetActive(true);
+        transform.position = startPosition;
+        transform.rotation = startRotation;
     }
 }

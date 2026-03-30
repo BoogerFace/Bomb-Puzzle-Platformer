@@ -101,10 +101,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Lava
   destroyDelayBomb: 2
-  destroyDelayPlatform: 10
+  destroyDelayPlatform: 20
   megaBombTag: MegaBomb
   destructibleTag: Destructible
   lavaEffect: {fileID: 6294508013172393196, guid: 043176b6a68be2b43b073aaaa4782c7d, type: 3}
+  lavaDrag: 5
+  lavaAngularDrag: 5
+  fallSlowMultiplier: 0.3
 --- !u!65 &5509895126404270489
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -124,5 +127,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.0111458, y: 1.386313, z: 2.0113523}
-  m_Center: {x: -0.00007998943, y: -0.18751144, z: -0.0000072717667}
+  m_Size: {x: 2.0111458, y: 1.886313, z: 2.0113523}
+  m_Center: {x: -0.00007998943, y: 0.062488556, z: -0.0000072717667}

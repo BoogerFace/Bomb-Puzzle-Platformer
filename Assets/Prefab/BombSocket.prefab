@@ -138,6 +138,7 @@ MonoBehaviour:
   bombTag: MegaBomb
   snapPoint: {fileID: 4150196484558913789}
   destroyBombAfterExplosion: 1
+  socketGroup: {fileID: 0}
   onBombAccepted:
     m_PersistentCalls:
       m_Calls: []

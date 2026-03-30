@@ -8,6 +8,7 @@ public class PlayerMove : MonoBehaviour
     public GameObject bombSpawn;
     public GameObject bombPrefab;
     public LayerMask groundLayer;
+    public GameObject playerSpawner;
 
     private InputAction moveAction;
     private Vector2 moveValue;
@@ -19,9 +20,8 @@ public class PlayerMove : MonoBehaviour
     private float speed = 300f;
     private float jumpForce = 12f;
     private float jumpMult = 2f;
-    private float groundDistance = .3f;
+    private float groundDistance = .4f;
     private float playerHeight = 2f;
-    private int groundCount = 0;
 
     private bool isGrounded = false;
     private bool lastGrounded = false;
@@ -32,6 +32,8 @@ public class PlayerMove : MonoBehaviour
     private bool isJumping = false;
     private bool isFalling = false;
     private bool isInAir = false;
+    private bool isSpawning = true;
+    
 
     private Vector3 lookDirection;
     private Vector3 throwHeadDirection;
@@ -42,9 +44,12 @@ public class PlayerMove : MonoBehaviour
     private Animator anim;
     private GameObject model;
     private GameObject hitbox;
+    private GameObject spawnPoint;
     
     [HideInInspector] public bool canInteract = false;
     [HideInInspector] public GameObject currentInteractable;
+    [HideInInspector] public bool isBombJumping = false;
+    [HideInInspector] public Vector3 bombForce = new Vector3(0,0,0);
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -61,6 +66,10 @@ public class PlayerMove : MonoBehaviour
         interactAction = InputSystem.actions.FindAction("Interact");
 
         lookDirection = model.transform.forward;
+
+        // Spawn on Spawn Point
+        spawnPoint = playerSpawner.transform.Find("SpawnPoint").gameObject;
+        SpawnPlayer();
     }
 
     // Update is called once per frame
@@ -68,98 +77,101 @@ public class PlayerMove : MonoBehaviour
     {
         isGrounded = Physics.Raycast(transform.position + new Vector3(0,playerHeight*.5f,0), Vector3.down, playerHeight * .5f + groundDistance, groundLayer);
 
-        moveValue = moveAction.ReadValue<Vector2>();
-        
-        if (moveAction.IsPressed() && !isInteracting)
+        if (!isSpawning)
         {
-            isRunning = true;
-            lookDirection = Vector3.RotateTowards(lookDirection, new Vector3(moveValue.x, 0, moveValue.y), 15f * Time.deltaTime, 0f);
-            model.transform.LookAt(new Vector3(model.transform.position.x + lookDirection.x, model.transform.position.y, model.transform.position.z + lookDirection.z));
-        }
-        else
-        {
-            isRunning = false;
-        }
+            moveValue = moveAction.ReadValue<Vector2>();
 
-        if (!isInteracting)
-        {
-            if (moveAction.WasPressedThisFrame() && isGrounded)
+            if (moveAction.IsPressed() && !isInteracting)
             {
-                anim.CrossFadeInFixedTime("Running", .1f, 0);
-            }
-            else if (moveAction.WasReleasedThisFrame() && isGrounded)
-            {
-                anim.CrossFadeInFixedTime("Idle", .1f, 0);
-            }
-            
-            if (jumpAction.IsPressed() && isGrounded && !isInAir && !isJumping && !isFalling)
-            {
-                isInAir = true;
-                isJumping = true;
-                anim.CrossFadeInFixedTime("Jump_Start", .1f, 0);
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-                rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-            }
-            
-            if (aimAction.WasPressedThisFrame() && !isAiming && !isThrowing)
-            {
-                isAiming = true;
-                anim.SetFloat("ThrowSpeed", 1);
-            }
-            else if (aimAction.WasReleasedThisFrame() && isAiming && !isThrowing)
-            {
-                isAiming = false;
-                anim.SetFloat("ThrowSpeed", -1);
-            }
-            
-            if (throwAction.WasPressedThisFrame() && isAiming)
-            {
-                isThrowing = true;
-                anim.SetFloat("ThrowSpeed", 1);
-            }
-            
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Running") && !isRunning && !anim.GetNextAnimatorStateInfo(0).IsName("Idle"))
-            {
-                anim.CrossFadeInFixedTime("Idle", .1f, 0); 
-            }
-        }
-
-        // Falling off ledge
-        if (rb.linearVelocity.y < -5f && !isJumping && !isFalling && !isInAir)
-        {
-            print("asd");
-            isInAir = true;
-            isFalling = true;
-            anim.CrossFadeInFixedTime("Jump_Idle", .1f, 0);
-        }
-
-        // On player landing
-        if (isGrounded && !lastGrounded)
-        {
-            isInAir = false;
-            isJumping = false;
-            isFalling = false;
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-            if (isRunning)
-            {
-                if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Running"))
-                {
-                    anim.CrossFadeInFixedTime("Running", .1f, 0); 
-                }
+                isRunning = true;
+                lookDirection = Vector3.RotateTowards(lookDirection, new Vector3(moveValue.x, 0, moveValue.y), 15f * Time.deltaTime, 0f);
+                model.transform.LookAt(new Vector3(model.transform.position.x + lookDirection.x, model.transform.position.y, model.transform.position.z + lookDirection.z));
             }
             else
             {
-                anim.CrossFadeInFixedTime("Jump_Land", .1f, 0);
+                isRunning = false;
             }
-        }
 
-        if (interactAction.WasPressedThisFrame() && canInteract && isGrounded && !isAiming && !isThrowing && !isInteracting)
-        {
-            isInteracting = true;
-            rb.linearVelocity = new Vector3(0,0,0);
-            model.transform.LookAt(new Vector3(currentInteractable.transform.position.x, model.transform.position.y, currentInteractable.transform.position.z));
-            anim.CrossFadeInFixedTime("Interact", .1f, 0);
-            currentInteractable.GetComponent<LeverTrigger>().Trigger();
+            if (!isInteracting)
+            {
+                if (moveAction.IsPressed() && isGrounded && !anim.GetCurrentAnimatorStateInfo(0).IsName("Running") && !anim.GetNextAnimatorStateInfo(0).IsName("Running") && !jumpAction.IsPressed())
+                {
+                    anim.CrossFadeInFixedTime("Running", .1f, 0);
+                }
+                if (moveAction.WasReleasedThisFrame() && isGrounded)
+                {
+                    anim.CrossFadeInFixedTime("Idle", .1f, 0);
+                }
+                
+                if (jumpAction.IsPressed() && isGrounded && !isInAir && !isJumping && !isFalling)
+                {
+                    isInAir = true;
+                    isJumping = true;
+                    anim.CrossFadeInFixedTime("Jump_Start", .1f, 0);
+                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+                    rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+                }
+                
+                if (aimAction.WasPressedThisFrame() && !isAiming && !isThrowing)
+                {
+                    isAiming = true;
+                    anim.SetFloat("ThrowSpeed", 1);
+                }
+                else if (aimAction.WasReleasedThisFrame() && isAiming && !isThrowing)
+                {
+                    isAiming = false;
+                    anim.SetFloat("ThrowSpeed", -1);
+                }
+                
+                if (throwAction.WasPressedThisFrame() && isAiming)
+                {
+                    isThrowing = true;
+                    anim.SetFloat("ThrowSpeed", 1);
+                }
+                
+                if (anim.GetCurrentAnimatorStateInfo(0).IsName("Running") && !isRunning && !anim.GetNextAnimatorStateInfo(0).IsName("Idle"))
+                {
+                    anim.CrossFadeInFixedTime("Idle", .1f, 0); 
+                }
+            }
+
+            // Falling off ledge
+            if (rb.linearVelocity.y < -5f && !isJumping && !isFalling && !isInAir && !OnSlope() && !isGrounded)
+            {
+                isInAir = true;
+                isFalling = true;
+                anim.CrossFadeInFixedTime("Jump_Idle", .1f, 0);
+            }
+
+            // On player landing
+            if (isGrounded && !lastGrounded)
+            {
+                isInAir = false;
+                isJumping = false;
+                isFalling = false;
+                isBombJumping = false;
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+                if (isRunning && !jumpAction.IsPressed())
+                {
+                    if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Running"))
+                    {
+                        anim.CrossFadeInFixedTime("Running", .1f, 0); 
+                    }
+                }
+                else
+                {
+                    anim.CrossFadeInFixedTime("Jump_Land", .1f, 0);
+                }
+            }
+
+            if (interactAction.WasPressedThisFrame() && canInteract && isGrounded && !isAiming && !isThrowing && !isInteracting)
+            {
+                isInteracting = true;
+                rb.linearVelocity = new Vector3(0,0,0);
+                model.transform.LookAt(new Vector3(currentInteractable.transform.position.x, model.transform.position.y, currentInteractable.transform.position.z));
+                anim.CrossFadeInFixedTime("Interact", .1f, 0);
+                currentInteractable.GetComponent<LeverTrigger>().Trigger();
+            }
         }
 
         // Store previous Grounded state
@@ -175,9 +187,17 @@ public class PlayerMove : MonoBehaviour
                 rb.useGravity = false;
                 rb.linearVelocity = GetSlopeMoveDirection() * speed * Time.deltaTime;
             }
+            else if (isBombJumping)
+            {
+                rb.useGravity = true;
+                rb.linearVelocity = new Vector3(Mathf.MoveTowards(rb.linearVelocity.x, 0, 10f * Time.deltaTime), rb.linearVelocity.y, Mathf.MoveTowards(rb.linearVelocity.z, 0, 10f * Time.deltaTime));
+            }
             else
             {
                 rb.useGravity = true;
+                // print(rb.linearVelocity);
+                // bombForce = new Vector3(Mathf.MoveTowards(bombForce.x, 0, 10f * Time.deltaTime), Mathf.MoveTowards(bombForce.y, 0, 10f * Time.deltaTime), Mathf.MoveTowards(bombForce.z, 0, 10f * Time.deltaTime));
+                // Vector3.MoveTowards(bombForce, new Vector3(0,0,0), 10f * Time.deltaTime);
                 rb.linearVelocity = new Vector3(moveValue.x * speed * Time.deltaTime, rb.linearVelocity.y, moveValue.y * speed * Time.deltaTime);
             }
         }
@@ -201,7 +221,7 @@ public class PlayerMove : MonoBehaviour
                 RaycastHit hit;
                 Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
                 
-                if (Physics.Raycast(ray, out hit)) 
+                if (Physics.Raycast(ray, out hit, 100f, groundLayer)) 
                 {
                     Transform objectHit = hit.transform;
                     bombDirection = (hit.point - bombSpawn.transform.position).normalized;
@@ -330,6 +350,12 @@ public class PlayerMove : MonoBehaviour
             anim.CrossFadeInFixedTime("Idle", .1f, 0);
         }
     }
+    
+
+    public void EndSpawn()
+    {
+        isSpawning = false;
+    }
 
 
     private bool OnSlope()
@@ -347,5 +373,18 @@ public class PlayerMove : MonoBehaviour
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(new Vector3(moveValue.x, 0, moveValue.y), slopeHit.normal).normalized;
+    }
+
+
+    private void SpawnPlayer()
+    {
+        model.SetActive(true);
+        anim.CrossFadeInFixedTime("Spawn_Ground", .1f, 0);
+        transform.position = spawnPoint.transform.position;
+    }
+
+    public void ResetBombJump()
+    {
+        isBombJumping = false;
     }
 }

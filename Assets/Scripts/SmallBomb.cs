@@ -15,6 +15,10 @@ public class SmallBomb : MonoBehaviour
 
     private bool exploded = false;
 
+    private string playerTag = "Player";
+    private float knockbackForce = 20f;
+
+
     public void Explode()
     {
         if (exploded)
@@ -51,12 +55,20 @@ public class SmallBomb : MonoBehaviour
             }
 
             // Knockback for bomb jump
-            // Rigidbody rb = hit.attachedRigidbody;
-            // if (rb != null)
-            // {
-            //     Vector3 dir = (hit.transform.position - transform.position).normalized;
-            //     rb.AddForce(dir * 8f, ForceMode.Impulse);
-            // }
+            Rigidbody rb = hit.attachedRigidbody;
+            if (rb != null && hit.CompareTag(playerTag))
+            {
+                Vector3 dir = (hit.transform.position - transform.position).normalized;
+                rb.AddForce(dir * knockbackForce, ForceMode.Impulse);
+                GameObject playerobject = hit.transform.parent.gameObject;
+                PlayerMove playerScript = playerobject.GetComponent<PlayerMove>();
+                if (playerScript != null)
+                {
+                    playerScript.isBombJumping = true;
+                    playerScript.bombForce = dir * knockbackForce;
+                    playerScript.Invoke(nameof(playerScript.ResetBombJump), .5f);
+                }
+            }
 
             // Trigger Targets
             if (hit.CompareTag(targetTag))

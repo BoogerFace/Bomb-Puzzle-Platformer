@@ -49,4 +49,10 @@ public class AnimationCalls : MonoBehaviour
     {
         script.Reset();
     }
+
+
+    private void EndSpawn()
+    {
+        script.EndSpawn();
+    }
 }

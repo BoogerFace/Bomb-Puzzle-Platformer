@@ -38,13 +38,14 @@ public class PauseMenuManager : MonoBehaviour
             return;
         }
 
-        pausePanel.SetActive(false);
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
 
-        // Initialize sliders without triggering sound
+        // Initialize sliders safely
         if (musicSlider != null && musicSource != null)
             musicSlider.SetValueWithoutNotify(musicSource.volume);
 
-        if (sfxSlider != null)
+        if (sfxSlider != null && SFXManager.instance != null)
             sfxSlider.SetValueWithoutNotify(SFXManager.instance.GetVolume());
 
         // Add listeners for slider value changes
@@ -69,7 +70,7 @@ public class PauseMenuManager : MonoBehaviour
     void Update()
     {
         // Toggle pause with Escape key
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             TogglePause();
         }
@@ -78,7 +79,10 @@ public class PauseMenuManager : MonoBehaviour
     public void TogglePause()
     {
         isPaused = !isPaused;
-        pausePanel.SetActive(isPaused);
+
+        if (pausePanel != null)
+            pausePanel.SetActive(isPaused);
+
         Time.timeScale = isPaused ? 0f : 1f;
     }
 
@@ -90,18 +94,19 @@ public class PauseMenuManager : MonoBehaviour
 
     public void SetSFXVolume(float volume)
     {
-        SFXManager.instance.SetVolume(volume);
+        if (SFXManager.instance != null)
+            SFXManager.instance.SetVolume(volume);
     }
 
     public void PlaySliderTick()
     {
-        if (sliderTickSound != null)
+        if (sliderTickSound != null && SFXManager.instance != null)
             SFXManager.instance.PlaySound(sliderTickSound);
     }
 
     void ReturnToMainMenu()
     {
         Time.timeScale = 1f; // Unpause
-        SceneManager.LoadScene("MainMenu"); // Replace with your main menu scene name
+        SceneManager.LoadScene("MainMenu"); // Change if needed
     }
 }

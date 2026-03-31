@@ -51,7 +51,11 @@ public class MegaBomb : TriggerableObject
         {
             if (hit.CompareTag(destructibleTag))
             {
-                Destroy(hit.gameObject);
+                Box box = hit.GetComponent<Box>();
+                if (box != null)
+                {
+                    box.Break();
+                }
             }
 
             Rigidbody rb = hit.attachedRigidbody;

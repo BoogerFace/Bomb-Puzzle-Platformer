@@ -26,6 +26,9 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
+        // Pause gameplay in main menu
+        Time.timeScale = 0f;
+
         optionsPanel.SetActive(false);
         levelsPanel.SetActive(false);
 
@@ -35,6 +38,12 @@ public class MainMenuManager : MonoBehaviour
 
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+
+        // Play menu music
+        if (musicSource != null && !musicSource.isPlaying)
+        {
+            musicSource.Play();
+        }
     }
 
     // PLAY BUTTON (OPEN LEVELS PANEL)
@@ -49,25 +58,33 @@ public class MainMenuManager : MonoBehaviour
         levelsPanel.SetActive(false);
     }
 
-    // LEVEL BUTTONS
+    // LOAD LEVELS
     public void LoadLevel1()
     {
-        SceneManager.LoadSceneAsync(level1);
+        LoadLevel(level1);
     }
 
     public void LoadLevel2()
     {
-        SceneManager.LoadScene(level2);
+        LoadLevel(level2);
     }
 
     public void LoadLevel3()
     {
-        SceneManager.LoadScene(level3);
+        LoadLevel(level3);
     }
 
     public void LoadLevel4()
     {
-        SceneManager.LoadScene(level4);
+        LoadLevel(level4);
+    }
+
+    // LOAD LEVEL FUNCTION
+    void LoadLevel(string levelName)
+    {
+        Time.timeScale = 1f; // Resume gameplay
+        StopMenuMusic();
+        SceneManager.LoadScene(levelName);
     }
 
     // STOP MENU MUSIC
@@ -110,6 +127,7 @@ public class MainMenuManager : MonoBehaviour
         SFXManager.instance.SetVolume(volume);
     }
 
+    // SLIDER SOUND
     public void PlaySliderReleaseSound()
     {
         SFXManager.instance.PlaySound(sliderTickSound);

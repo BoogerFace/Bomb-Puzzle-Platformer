@@ -41,22 +41,19 @@ public class SmallBomb : MonoBehaviour
         {
             Debug.Log("Hit: " + hit.gameObject.name + " Tag: " + hit.gameObject.tag);
 
-            // Break Destructible
+            // Break Destructible Boxes
             if (hit.CompareTag(destructibleTag))
             {
-                if (!hit.gameObject.GetComponent<Box>().isBig)
+                Box box = hit.GetComponent<Box>();
+
+                if (box != null)
                 {
-                    Destroy(hit.gameObject);
+                    if (!box.isBig)
+                    {
+                        box.Break();   // <-- Use Break instead of Destroy
+                    }
                 }
             }
-
-            // Knockback for bomb jump
-            // Rigidbody rb = hit.attachedRigidbody;
-            // if (rb != null)
-            // {
-            //     Vector3 dir = (hit.transform.position - transform.position).normalized;
-            //     rb.AddForce(dir * 8f, ForceMode.Impulse);
-            // }
 
             // Trigger Targets
             if (hit.CompareTag(targetTag))

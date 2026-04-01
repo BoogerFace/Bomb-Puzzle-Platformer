@@ -387,4 +387,9 @@ public class PlayerMove : MonoBehaviour
     {
         isBombJumping = false;
     }
+
+    public void Die()
+    {
+        
+    }
 }

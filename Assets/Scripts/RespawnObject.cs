@@ -8,6 +8,7 @@ public class RespawnObject : MonoBehaviour
     [SerializeField] private float respawnDelay = 3f;
     [SerializeField] private bool spawnOnStart = true;
     public GameObject spawnParent;
+
     [Header("Optional")]
     [SerializeField] private Transform spawnPoint;
 
@@ -34,13 +35,16 @@ public class RespawnObject : MonoBehaviour
             point.position,
             point.rotation
         );
-        currentInstance.transform.SetParent(spawnParent != null ? spawnParent.transform : null);
+
+        currentInstance.transform.SetParent(
+            spawnParent != null ? spawnParent.transform : null
+        );
+
         respawning = false;
     }
 
     void Update()
     {
-        // Detect destruction
         if (currentInstance == null && !respawning)
         {
             StartCoroutine(RespawnRoutine());

@@ -13,24 +13,13 @@ public class Lava : MonoBehaviour
     [SerializeField] private string destructibleTag = "Destructible";
     [SerializeField] private GameObject lavaEffect;
 
-
     [SerializeField] private float lavaDrag = 5f;
     [SerializeField] private float lavaAngularDrag = 5f;
     [SerializeField] private float fallSlowMultiplier = 0.3f;
+
     private Dictionary<GameObject, Coroutine> activeCoroutines = new Dictionary<GameObject, Coroutine>();
     private Dictionary<Rigidbody, (float drag, float angularDrag)> originalPhysics
-    = new Dictionary<Rigidbody, (float, float)>();
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+        = new Dictionary<Rigidbody, (float, float)>();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -41,14 +30,11 @@ public class Lava : MonoBehaviour
 
         if (rb != null && !originalPhysics.ContainsKey(rb))
         {
-            // Store original values
             originalPhysics.Add(rb, (rb.linearDamping, rb.angularDamping));
 
-            // Apply lava physics
             rb.linearDamping = lavaDrag;
             rb.angularDamping = lavaAngularDrag;
 
-            // Slow downward velocity
             rb.linearVelocity = new Vector3(
                 rb.linearVelocity.x,
                 rb.linearVelocity.y * fallSlowMultiplier,
@@ -78,21 +64,18 @@ public class Lava : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        // Stop destruction coroutine
         if (activeCoroutines.TryGetValue(other.gameObject, out Coroutine c))
         {
             StopCoroutine(c);
             activeCoroutines.Remove(other.gameObject);
         }
 
-        // Restore Rigidbody physics
         Rigidbody rb = other.attachedRigidbody;
 
         if (rb != null && originalPhysics.TryGetValue(rb, out var original))
         {
             rb.linearDamping = original.drag;
             rb.angularDamping = original.angularDrag;
-
             originalPhysics.Remove(rb);
         }
     }
@@ -106,10 +89,9 @@ public class Lava : MonoBehaviour
         if (rb == null)
             return;
 
-        // Continuously damp downward velocity
         rb.linearVelocity = new Vector3(
             rb.linearVelocity.x,
-            Mathf.Max(rb.linearVelocity.y, -2f), // limit fall speed
+            Mathf.Max(rb.linearVelocity.y, -2f),
             rb.linearVelocity.z
         );
     }
@@ -118,7 +100,6 @@ public class Lava : MonoBehaviour
     {
         return other.CompareTag(megaBombTag) || other.CompareTag(destructibleTag);
     }
-
 
     private IEnumerator DestroyAfterDelay(GameObject target, float delay)
     {
@@ -129,18 +110,23 @@ public class Lava : MonoBehaviour
             if (lavaEffect != null)
             {
                 Vector3 spawnPos = target.transform.position + Vector3.up * 0.5f;
-
-                GameObject fx = Instantiate(
-                    lavaEffect,
-                    spawnPos,
-                    Quaternion.identity
-
-                );
-                Debug.Log("Spawning lava effect at: " + spawnPos);
-                Destroy(fx, 2f); 
+                GameObject fx = Instantiate(lavaEffect, spawnPos, Quaternion.identity);
+                Destroy(fx, 2f);
             }
 
-            Destroy(target);
+            // Check recursively for Box in parent or children
+            Box box = target.GetComponent<Box>();
+            if (box == null)
+                box = target.GetComponentInChildren<Box>();
+
+            if (box != null)
+            {
+                box.Break();
+            }
+            else
+            {
+                Destroy(target);
+            }
         }
 
         activeCoroutines.Remove(target);

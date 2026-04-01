@@ -12,20 +12,26 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 0a669edd5d3cfdf4eb296b4e325b3128
   - enabled: 1
-    path: Assets/Scenes/Level_1.unity
-    guid: 1cfce6a86e5412446907afec42a2deb3
+    path: Assets/Scenes/Level_1_New.unity
+    guid: 8b9c5a2d958209641a46e23685739f4e
   - enabled: 1
-    path: Assets/Scenes/Level2.unity
-    guid: a91dda86f7f4e064e8b3d05997b54d46
+    path: Assets/Scenes/Level2b_Tava_Rework.unity
+    guid: 7347a823fc8e054428b023ae371646fd
   - enabled: 1
     path: Assets/Scenes/Level3Alvin.unity
     guid: b5f05707bd623f043924a3ac4a324a15
   - enabled: 1
     path: Assets/Scenes/Level4Test.unity
     guid: 3a77e82980c3d4144876baedcf3dd961
-  - enabled: 1
-    path: Assets/Scenes/Level_1_New.unity
-    guid: 8b9c5a2d958209641a46e23685739f4e
+  - enabled: 0
+    path: Assets/Scenes/Level_1.unity
+    guid: 1cfce6a86e5412446907afec42a2deb3
+  - enabled: 0
+    path: Assets/Scenes/Level2.unity
+    guid: a91dda86f7f4e064e8b3d05997b54d46
+  - enabled: 0
+    path: Assets/Scenes/Level2a_Tava.unity
+    guid: 73199f15b55aacc4399b222720cf5c48
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

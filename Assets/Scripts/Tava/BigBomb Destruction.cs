@@ -41,13 +41,7 @@ public class Box : MonoBehaviour
 
         Destroy(broken, despawnTime);
 
-        gameObject.SetActive(false);
-    }
-
-    public void ResetObject()
-    {
-        gameObject.SetActive(true);
-        transform.position = startPosition;
-        transform.rotation = startRotation;
+        // 🔥 IMPORTANT FIX
+        Destroy(gameObject);
     }
 }

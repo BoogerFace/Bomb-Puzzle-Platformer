@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -53,6 +54,8 @@ public class PlayerController : MonoBehaviour
     private GameObject model;
     private GameObject hitbox;
     private GameObject spawnPoint;
+
+    [SerializeField] private TMP_Text ammoDisplay;
     
     [HideInInspector] public bool canInteract = false;
     [HideInInspector] public GameObject currentInteractable;
@@ -166,7 +169,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Falling off ledge
-            if (rb.linearVelocity.y < -5f && !isJumping && !isFalling && !isInAir && !OnSlope() && !isGrounded)
+            if ((rb.linearVelocity.y < -5f || rb.linearVelocity.y > 5f)&& !isJumping && !isFalling && !isInAir && !OnSlope() && !isGrounded)
             {
                 isInAir = true;
                 isFalling = true;
@@ -354,6 +357,7 @@ public class PlayerController : MonoBehaviour
     public void ThrowBomb()
     {
         ammo -= 1;
+        UpdateAmmoDisplay();
         bombPivot.SetActive(false);
         lr.enabled = false;
         lr.positionCount = 0;
@@ -442,5 +446,11 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(time);
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+
+    public void UpdateAmmoDisplay()
+    {
+        ammoDisplay.text = ammo.ToString();
     }
 }

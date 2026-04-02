@@ -23,7 +23,7 @@ public class LeverTrigger : Triggers
             GameObject playerobject = other.transform.parent.gameObject;
             if (playerobject.CompareTag(playerTag))
             {
-                PlayerMove playerScript = playerobject.GetComponent<PlayerMove>();
+                PlayerController playerScript = playerobject.GetComponent<PlayerController>();
                 if (playerScript != null)
                 {
                     playerScript.canInteract = true;
@@ -41,7 +41,7 @@ public class LeverTrigger : Triggers
             GameObject playerobject = other.transform.parent.gameObject;
             if (playerobject.CompareTag(playerTag))
             {
-                PlayerMove playerScript = playerobject.GetComponent<PlayerMove>();
+                PlayerController playerScript = playerobject.GetComponent<PlayerController>();
                 if (playerScript != null)
                 {
                     playerScript.canInteract = false;

@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spawner
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7bc4d758b5dc8ed4fb19037c23dfaa38, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -59,6 +63,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7bc4d758b5dc8ed4fb19037c23dfaa38, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7617985817457270429}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7bc4d758b5dc8ed4fb19037c23dfaa38, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6357983865298946155}
   m_SourcePrefab: {fileID: 100100000, guid: 7bc4d758b5dc8ed4fb19037c23dfaa38, type: 3}
 --- !u!1 &717267255806162741 stripped
 GameObject:
@@ -80,4 +87,26 @@ MonoBehaviour:
   prefabToSpawn: {fileID: 0}
   respawnDelay: 3
   spawnOnStart: 1
+  spawnParent: {fileID: 0}
   spawnPoint: {fileID: 0}
+--- !u!65 &6357983865298946155
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 717267255806162741}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4, y: 0.5, z: 4}
+  m_Center: {x: 0, y: 0.24999999, z: 0}

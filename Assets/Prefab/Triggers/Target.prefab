@@ -53,6 +53,10 @@ PrefabInstance:
       value: Target
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 41224a9a75469c74baf5ae5434189a51, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 41224a9a75469c74baf5ae5434189a51, type: 3}
       propertyPath: m_TagString
       value: Targets
       objectReference: {fileID: 0}

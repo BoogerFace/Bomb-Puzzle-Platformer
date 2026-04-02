@@ -10,6 +10,8 @@ TagManager:
   - SmallBomb
   - SmallDestructible
   - Targets
+  - NonCollidable
+  - Levers
   layers:
   - Default
   - TransparentFX
@@ -22,7 +24,7 @@ TagManager:
   - Destructible
   - Bomb
   - Ground
-  - 
+  - LevelComponents
   - 
   - 
   - 

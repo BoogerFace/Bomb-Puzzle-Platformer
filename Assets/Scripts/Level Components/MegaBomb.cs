@@ -14,6 +14,12 @@ public class MegaBomb : TriggerableObject
 
     private bool exploded = false;
 
+    private string playerTag = "Player";
+    private float knockbackForce = 40f;
+
+    private int bigBombDmg = 3;
+
+
     void Update()
     {
         // Press B to detonate
@@ -58,11 +64,25 @@ public class MegaBomb : TriggerableObject
                 }
             }
 
+            // Player Knockback for bomb jump
             Rigidbody rb = hit.attachedRigidbody;
-            if (rb != null)
+            if (rb != null && hit.CompareTag(playerTag))
             {
                 Vector3 dir = (hit.transform.position - transform.position).normalized;
-                rb.AddForce(dir * 8f, ForceMode.Impulse);
+                rb.AddForce(dir * knockbackForce, ForceMode.Impulse);
+                GameObject playerobject = hit.transform.parent.gameObject;
+                PlayerController playerScript = playerobject.GetComponent<PlayerController>();
+                PlayerHealth playerHealth = playerobject.GetComponent<PlayerHealth>();
+                if (playerScript != null)
+                {
+                    playerScript.isBombJumping = true;
+                    playerScript.bombForce = dir * knockbackForce;
+                    playerScript.Invoke(nameof(playerScript.ResetBombJump), .5f);
+                }
+                if (playerHealth != null)
+                {
+                    playerHealth.TakeDamage(bigBombDmg);
+                }
             }
         }
 
@@ -80,5 +100,41 @@ public class MegaBomb : TriggerableObject
     {
         Explode();
         print("Mega Bomb Script Triggered!");
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.parent != null)
+        {
+            GameObject playerobject = other.transform.parent.gameObject;
+            if (playerobject.CompareTag(playerTag))
+            {
+                PlayerController playerScript = playerobject.GetComponent<PlayerController>();
+                if (playerScript != null)
+                {
+                    playerScript.canInteract = true;
+                    playerScript.currentInteractable = transform.gameObject;
+                }
+            }
+        }
+    }
+
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.transform.parent != null)
+        {
+            GameObject playerobject = other.transform.parent.gameObject;
+            if (playerobject.CompareTag(playerTag))
+            {
+                PlayerController playerScript = playerobject.GetComponent<PlayerController>();
+                if (playerScript != null)
+                {
+                    playerScript.canInteract = false;
+                    playerScript.currentInteractable = null;
+                }
+            }
+        }
     }
 }

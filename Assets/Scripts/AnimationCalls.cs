@@ -4,13 +4,13 @@ public class AnimationCalls : MonoBehaviour
 {
     public GameObject parent;
 
-    private PlayerMove script;
+    private PlayerController script;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        script = parent.GetComponent<PlayerMove>();
+        script = parent.GetComponent<PlayerController>();
     }
 
 
@@ -48,5 +48,11 @@ public class AnimationCalls : MonoBehaviour
     private void Reset()
     {
         script.Reset();
+    }
+
+
+    private void EndSpawn()
+    {
+        script.EndSpawn();
     }
 }

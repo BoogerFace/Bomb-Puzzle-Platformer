@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class BombSocketGroup : MonoBehaviour
 {
     [Header("Socket Requirements")]
-    [SerializeField] private int requiredSockets = 2;
+    [SerializeField] private int requiredSockets = 1;
 
     [Header("Destructibles to Destroy")]
     [SerializeField] private List<SceneDestructible> destructibles;

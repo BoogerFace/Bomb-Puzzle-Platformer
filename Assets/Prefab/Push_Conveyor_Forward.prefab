@@ -84,15 +84,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 102.75798
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.41383
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.610049
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_LocalRotation.w
@@ -128,7 +128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_Name
-      value: Push_Conveyor(New)
+      value: Push_Conveyor_Forward
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 262d6b54501f99541918c18b86b22c05, type: 3}
       propertyPath: m_Layer
@@ -180,7 +180,7 @@ Rigidbody:
   m_GameObject: {fileID: 4578052380655652648}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 1
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -217,8 +217,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.8, y: 1.8, z: 1.8}
-  m_Center: {x: 3.1058875e-22, y: 0.000000059604645, z: -2.5579696e-28}
+  m_Size: {x: 1.5, y: 1.8, z: 1.5}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5696568025177353473
 MonoBehaviour:
   m_ObjectHideFlags: 0

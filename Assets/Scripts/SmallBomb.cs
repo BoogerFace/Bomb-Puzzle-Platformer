@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class SmallBomb : MonoBehaviour
 {
@@ -14,6 +15,20 @@ public class SmallBomb : MonoBehaviour
     private string targetTag = "Targets";
 
     private bool exploded = false;
+
+    private string playerTag = "Player";
+    private float knockbackForce = 5f;
+
+    private float explodeTimer = 2f;
+
+    private int smallBombDmg = 1;
+
+
+    private void Start()
+    {
+        StartCoroutine(ExplodeAfterTime(explodeTimer));
+    }
+
 
     public void Explode()
     {
@@ -41,17 +56,33 @@ public class SmallBomb : MonoBehaviour
         {
             Debug.Log("Hit: " + hit.gameObject.name + " Tag: " + hit.gameObject.tag);
 
-            // Break Destructible Boxes
+            // Break Destructible
             if (hit.CompareTag(destructibleTag))
             {
-                Box box = hit.GetComponent<Box>();
-
-                if (box != null)
+                if (!hit.gameObject.GetComponent<Box>().isBig)
                 {
-                    if (!box.isBig)
-                    {
-                        box.Break();   // <-- Use Break instead of Destroy
-                    }
+                    Destroy(hit.gameObject);
+                }
+            }
+
+            // Player Knockback for bomb jump
+            Rigidbody rb = hit.attachedRigidbody;
+            if (rb != null && hit.CompareTag(playerTag))
+            {
+                Vector3 dir = (hit.transform.position - transform.position).normalized;
+                rb.AddForce(dir * knockbackForce, ForceMode.Impulse);
+                GameObject playerobject = hit.transform.parent.gameObject;
+                PlayerController playerScript = playerobject.GetComponent<PlayerController>();
+                PlayerHealth playerHealth = playerobject.GetComponent<PlayerHealth>();
+                if (playerScript != null)
+                {
+                    playerScript.isBombJumping = true;
+                    playerScript.bombForce = dir * knockbackForce;
+                    playerScript.Invoke(nameof(playerScript.ResetBombJump), .5f);
+                }
+                if (playerHealth != null)
+                {
+                    playerHealth.TakeDamage(smallBombDmg);
                 }
             }
 
@@ -72,9 +103,17 @@ public class SmallBomb : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.gameObject.CompareTag("Player"))
+        if (!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("NonCollidable"))
         {
             Explode();
         }
+    }
+    
+
+    IEnumerator ExplodeAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        Explode();
     }
 }

@@ -11,6 +11,7 @@ public class Lava : MonoBehaviour
     [SerializeField] private float destroyDelayPlatform = 1.5f;
     [SerializeField] private string megaBombTag = "MegaBomb";
     [SerializeField] private string destructibleTag = "Destructible";
+    [SerializeField] private string playerTag = "Player";
     [SerializeField] private GameObject lavaEffect;
 
     [SerializeField] private float lavaDrag = 5f;
@@ -40,6 +41,11 @@ public class Lava : MonoBehaviour
                 rb.linearVelocity.y * fallSlowMultiplier,
                 rb.linearVelocity.z
             );
+        }
+
+        if (other.CompareTag(playerTag))
+        {
+            rb.gameObject.GetComponent<PlayerHealth>().TakeDamage(5);
         }
 
         if (activeCoroutines.ContainsKey(other.gameObject))
@@ -98,7 +104,7 @@ public class Lava : MonoBehaviour
 
     private bool isValidTarget(Collider other)
     {
-        return other.CompareTag(megaBombTag) || other.CompareTag(destructibleTag);
+        return other.CompareTag(megaBombTag) || other.CompareTag(destructibleTag) || other.CompareTag(playerTag);
     }
 
     private IEnumerator DestroyAfterDelay(GameObject target, float delay)

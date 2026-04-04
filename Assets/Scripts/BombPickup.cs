@@ -11,7 +11,7 @@ public class BombPickup : MonoBehaviour
 
     private int currentBombCount = 1;
     private bool isReplenishing = false;
-    private float replenishTimer = 15;
+    public float replenishTimer = 15;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

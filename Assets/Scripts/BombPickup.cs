@@ -39,6 +39,7 @@ public class BombPickup : MonoBehaviour
             if (playerScript != null && currentBombCount > 0)
             {
                 playerScript.ammo += currentBombCount;
+                playerScript.UpdateAmmoDisplay();
                 currentBombCount = 0;
                 for (int i = 0; i < bombModels.Length; i++)
                 {

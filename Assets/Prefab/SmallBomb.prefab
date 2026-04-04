@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0e731285d910974192fdad4b6e81e28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  explosionRadius: 1
+  explosionRadius: 1.5
   explosionParticlePrefab: {fileID: 8194992990867289339, guid: 99bc28c0d45f51c4fbac01080b73edc7, type: 3}
   destructibleTag: Destructible
 --- !u!54 &4189568865662673592

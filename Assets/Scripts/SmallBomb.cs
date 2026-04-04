@@ -17,7 +17,7 @@ public class SmallBomb : MonoBehaviour
     private bool exploded = false;
 
     private string playerTag = "Player";
-    private float knockbackForce = 20f;
+    private float knockbackForce = 5f;
 
     private float explodeTimer = 2f;
 

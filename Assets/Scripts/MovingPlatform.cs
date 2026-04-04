@@ -13,7 +13,7 @@ public class MovingPlatform : TriggerableObject
 
     void Start()
     {
-        startPosition = transform.position;
+        startPosition = transform.localPosition;
         targetPosition = startPosition + moveOffset;
     }
 
@@ -21,13 +21,13 @@ public class MovingPlatform : TriggerableObject
     {
         if (!isMoving) return;
 
-        transform.position = Vector3.MoveTowards(
-            transform.position,
+        transform.localPosition = Vector3.MoveTowards(
+            transform.localPosition,
             targetPosition,
             moveSpeed * Time.deltaTime
         );
 
-        if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
+        if (Vector3.Distance(transform.localPosition, targetPosition) < 0.01f)
         {
             if (movingForward)
             {

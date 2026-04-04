@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
     private GameObject model;
     private GameObject hitbox;
     private GameObject spawnPoint;
+    private GameObject tempBomb;
 
     [SerializeField] private TMP_Text ammoDisplay;
     
@@ -203,7 +204,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Interacting with lever/Big Bomb
-            if (interactAction.WasPressedThisFrame() && canInteract && isGrounded && !isAiming && !isThrowing && !isInteracting)
+            if (interactAction.WasPressedThisFrame() && canInteract && isGrounded && !isAiming && !isThrowing && !isInteracting && currentInteractable != null)
             {
                 isInteracting = true;
                 rb.linearVelocity = new Vector3(0,0,0);
@@ -216,7 +217,8 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (currentInteractable.CompareTag("MegaBomb"))
                 {
-                    currentInteractable.GetComponent<MegaBomb>().Triggered();
+                    tempBomb = currentInteractable;
+                    StartCoroutine(TriggerBigBombAfterTime(3f));
                     currentInteractable = null;
                     interactBillboard.SetActive(false);
                 }
@@ -452,5 +454,15 @@ public class PlayerController : MonoBehaviour
     public void UpdateAmmoDisplay()
     {
         ammoDisplay.text = ammo.ToString();
+    }
+    
+
+    IEnumerator TriggerBigBombAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        tempBomb.GetComponent<MegaBomb>().Triggered();
+        currentInteractable = null;
+        interactBillboard.SetActive(false);
     }
 }

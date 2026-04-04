@@ -10,6 +10,12 @@ public class PushBlock : MonoBehaviour
 
     private bool isMoving = false;
 
+    private Rigidbody rb;
+
+    private void Start() {
+        rb = transform.GetComponent<Rigidbody>();
+    }
+
     private void OnCollisionStay(Collision collision)
     {
         if (isMoving)
@@ -68,5 +74,9 @@ public class PushBlock : MonoBehaviour
         {
             return dir.z > 0 ? Vector3.forward : Vector3.back;
         }
+    }
+    
+    private void FixedUpdate() {
+        rb.linearVelocity = new Vector3(0,rb.linearVelocity.y,0);
     }
 }

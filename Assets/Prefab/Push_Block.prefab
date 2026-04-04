@@ -68,14 +68,47 @@ PrefabInstance:
       propertyPath: m_Name
       value: Push_Block
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fe5fbfa21f5a03f4bb9a8a4e8d6c377d, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: fe5fbfa21f5a03f4bb9a8a4e8d6c377d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8003804194362840121}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fe5fbfa21f5a03f4bb9a8a4e8d6c377d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7109882701602492913}
   m_SourcePrefab: {fileID: 100100000, guid: fe5fbfa21f5a03f4bb9a8a4e8d6c377d, type: 3}
+--- !u!1 &1532774509793188283 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: fe5fbfa21f5a03f4bb9a8a4e8d6c377d, type: 3}
+  m_PrefabInstance: {fileID: 1838853595956651242}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &7109882701602492913
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1532774509793188283}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.0000005, y: 2.0000005, z: 2}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!4 &2165759623612547841 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fe5fbfa21f5a03f4bb9a8a4e8d6c377d, type: 3}
@@ -148,6 +181,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b1ccb5133e9ccaa4f95021a9349e7f5f, type: 3}
       propertyPath: m_Name
       value: Spring
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b1ccb5133e9ccaa4f95021a9349e7f5f, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -265,6 +302,9 @@ MonoBehaviour:
     m_Bits: 128
   animator: {fileID: 5492896046881762617}
   boolName: IsBouncing
+  audioSource: {fileID: 0}
+  springSound: {fileID: 0}
+  pitchRange: {x: 0.9, y: 1.1}
   cooldown: 0.3
 --- !u!4 &8003804194362840121 stripped
 Transform:

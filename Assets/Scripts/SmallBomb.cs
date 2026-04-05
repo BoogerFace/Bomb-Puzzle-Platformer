@@ -65,9 +65,12 @@ public class SmallBomb : MonoBehaviour
             // Break Destructible
             if (hit.CompareTag(destructibleTag))
             {
-                if (!hit.gameObject.GetComponent<Box>().isBig)
+                if (hit.gameObject.GetComponent<Box>() != null)
                 {
-                    Destroy(hit.gameObject);
+                    if (!hit.gameObject.GetComponent<Box>().isBig)
+                    {
+                        Destroy(hit.gameObject);
+                    }
                 }
             }
 

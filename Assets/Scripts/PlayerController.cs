@@ -420,7 +420,10 @@ public class PlayerController : MonoBehaviour
         isDying = false;
         model.SetActive(true);
         anim.CrossFadeInFixedTime("Spawn_Ground", .1f, 0);
+        anim.CrossFadeInFixedTime("Throw", .1f, 1);
         transform.position = spawn_position;
+        rb.linearDamping = 0f;
+        rb.angularDamping = 0.05f;
     }
 
     public void ResetBombJump()
@@ -493,6 +496,7 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = new Vector3(0,0,0);
         anim.CrossFadeInFixedTime("Death_A", .1f, 0);
         anim.CrossFadeInFixedTime("Idle", .1f, 1);
+        anim.SetFloat("ThrowSpeed", -1);
 
         isRunning = false;
         isAiming = false;

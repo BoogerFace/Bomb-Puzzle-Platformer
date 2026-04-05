@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DoorOpen : TriggerableObject
 {
-    private bool isOpened = false;
+    public bool isOpened = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

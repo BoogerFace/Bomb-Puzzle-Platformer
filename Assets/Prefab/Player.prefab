@@ -181,6 +181,8 @@ MonoBehaviour:
   interactBillboard: {fileID: 3220538512799792854}
   ammo: 0
   ammoDisplay: {fileID: 0}
+  sfxManager: {fileID: 0}
+  explodeSFX: {fileID: 8300000, guid: bf47aa3a71e69be42a7aba9bda841f13, type: 3}
   canInteract: 0
   currentInteractable: {fileID: 0}
   isBombJumping: 0
@@ -695,7 +697,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4055
+    m_Bits: 8151
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

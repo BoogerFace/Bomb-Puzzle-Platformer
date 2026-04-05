@@ -22,10 +22,14 @@ public class SmallBomb : MonoBehaviour
     private float explodeTimer = 2f;
 
     private int smallBombDmg = 1;
+    
+    public AudioSource sfxManager;
+    [SerializeField] private AudioClip explodeSFX;
 
 
     private void Start()
     {
+        sfxManager = GameObject.Find("SFXManager").GetComponent<AudioSource>();
         StartCoroutine(ExplodeAfterTime(explodeTimer));
     }
 
@@ -38,6 +42,8 @@ public class SmallBomb : MonoBehaviour
         exploded = true;
 
         Debug.Log("Small bomb exploded!");
+        sfxManager.pitch = Random.Range(1.1f, 1.2f);
+        sfxManager.PlayOneShot(explodeSFX, Random.Range(.4f, .6f));
 
         if (explosionParticlePrefab != null)
         {

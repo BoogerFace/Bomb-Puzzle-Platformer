@@ -3,6 +3,7 @@ using UnityEngine;
 public class ButtonTrigger : Triggers
 {
     [SerializeField] private GameObject buttonModel;
+    [SerializeField] private bool isRetrigger = false;
 
     private bool isPressed = false;
     private int objectsOnTop = 0;
@@ -43,6 +44,11 @@ public class ButtonTrigger : Triggers
         {
             isPressed = false;
             buttonModel.transform.Translate(new Vector3(0, buttonMovement, 0));
+            
+            if (isRetrigger)
+            {
+                Trigger();
+            }
         }
     }
 

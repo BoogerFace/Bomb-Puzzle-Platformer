@@ -12,6 +12,7 @@ TagManager:
   - Targets
   - NonCollidable
   - Levers
+  - ignore
   layers:
   - Default
   - TransparentFX
@@ -25,7 +26,7 @@ TagManager:
   - Bomb
   - Ground
   - LevelComponents
-  - 
+  - ignore
   - 
   - 
   - 

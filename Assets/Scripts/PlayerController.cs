@@ -57,6 +57,8 @@ public class PlayerController : MonoBehaviour
     private GameObject tempBomb;
 
     [SerializeField] private TMP_Text ammoDisplay;
+    [SerializeField] private AudioSource sfxManager;
+    [SerializeField] private AudioClip explodeSFX;
     
     [HideInInspector] public bool canInteract = false;
     [HideInInspector] public GameObject currentInteractable;

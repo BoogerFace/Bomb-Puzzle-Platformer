@@ -71,6 +71,8 @@ MonoBehaviour:
   explosionRadius: 1.5
   explosionParticlePrefab: {fileID: 8194992990867289339, guid: 99bc28c0d45f51c4fbac01080b73edc7, type: 3}
   destructibleTag: Destructible
+  sfxManager: {fileID: 0}
+  explodeSFX: {fileID: 8300000, guid: bf47aa3a71e69be42a7aba9bda841f13, type: 3}
 --- !u!54 &4189568865662673592
 Rigidbody:
   m_ObjectHideFlags: 0

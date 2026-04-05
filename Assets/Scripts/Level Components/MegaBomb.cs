@@ -18,6 +18,15 @@ public class MegaBomb : TriggerableObject
     private float knockbackForce = 40f;
 
     private int bigBombDmg = 3;
+    
+    public AudioSource sfxManager;
+    [SerializeField] private AudioClip explodeSFX;
+
+
+    private void Start()
+    {
+        sfxManager = GameObject.Find("SFXManager").GetComponent<AudioSource>();
+    }
 
 
     void Update()
@@ -35,6 +44,8 @@ public class MegaBomb : TriggerableObject
             return;
 
         exploded = true;
+        sfxManager.pitch = Random.Range(.8f, .9f);
+        sfxManager.PlayOneShot(explodeSFX, Random.Range(.9f, 1.1f));
 
         // Spawn particle effect
         if (explosionParticlePrefab != null)

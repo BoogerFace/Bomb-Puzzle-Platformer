@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private InputAction throwAction;
     private InputAction interactAction;
     private LineRenderer lr;
+    private Vector3 lastPosition;
 
     private float speed = 300f;
     private float jumpForce = 12f;
@@ -85,7 +86,10 @@ public class PlayerController : MonoBehaviour
 
         // Spawn on Spawn Point
         spawnPoint = playerSpawner.transform.Find("SpawnPoint").gameObject;
-        SpawnPlayer();
+        SpawnPlayer(spawnPoint.transform.position);
+
+        lastPosition = spawnPoint.transform.position;
+        StartCoroutine(LastPositionCheck(3f));
     }
 
     // Update is called once per frame
@@ -410,11 +414,13 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public void SpawnPlayer()
+    public void SpawnPlayer(Vector3 spawn_position)
     {
+        isSpawning = true;
+        isDying = false;
         model.SetActive(true);
         anim.CrossFadeInFixedTime("Spawn_Ground", .1f, 0);
-        transform.position = spawnPoint.transform.position;
+        transform.position = spawn_position;
     }
 
     public void ResetBombJump()
@@ -466,5 +472,47 @@ public class PlayerController : MonoBehaviour
         tempBomb.GetComponent<MegaBomb>().Triggered();
         currentInteractable = null;
         interactBillboard.SetActive(false);
+    }
+    
+
+    IEnumerator LastPositionCheck(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        if (isGrounded)
+        {
+            lastPosition = transform.position;
+        }
+        StartCoroutine(LastPositionCheck(time));
+    }
+
+
+    public void LavaDie()
+    {
+        isDying = true;
+        rb.linearVelocity = new Vector3(0,0,0);
+        anim.CrossFadeInFixedTime("Death_A", .1f, 0);
+        anim.CrossFadeInFixedTime("Idle", .1f, 1);
+
+        isRunning = false;
+        isAiming = false;
+        isThrowing = false;
+        isInteracting = false;
+        isJumping = false;
+        isFalling = false;
+        isInAir = false;
+        bombPivot.SetActive(false);
+        lr.enabled = false;
+        lr.positionCount = 0;
+
+        StartCoroutine(SpawnAfterTime(3f, lastPosition));
+    }
+    
+
+    IEnumerator SpawnAfterTime(float time, Vector3 spawn_pos)
+    {
+        yield return new WaitForSeconds(time);
+
+        SpawnPlayer(spawn_pos);
     }
 }

@@ -88,4 +88,11 @@ public class PlayerHealth : MonoBehaviour
         // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         playerScript.Die();
     }
+
+
+    public void LavaDie()
+    {
+        // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        playerScript.LavaDie();
+    }
 }

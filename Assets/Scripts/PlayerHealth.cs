@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour
 {
     private int maxHealth = 5;
-    private int health = 5;
+    public int health = 5;
     
     private PlayerController playerScript;
     

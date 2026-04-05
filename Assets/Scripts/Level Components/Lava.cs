@@ -45,7 +45,11 @@ public class Lava : MonoBehaviour
 
         if (other.CompareTag(playerTag))
         {
-            rb.gameObject.GetComponent<PlayerHealth>().TakeDamage(5);
+            rb.gameObject.GetComponent<PlayerHealth>().TakeDamage(1);
+            if (rb.gameObject.GetComponent<PlayerHealth>().health > 0)
+            {
+                rb.gameObject.GetComponent<PlayerHealth>().LavaDie();
+            }
         }
 
         if (activeCoroutines.ContainsKey(other.gameObject))

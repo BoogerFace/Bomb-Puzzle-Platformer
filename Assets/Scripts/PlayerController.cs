@@ -33,17 +33,17 @@ public class PlayerController : MonoBehaviour
 
     public int ammo = 0;
 
-    private bool isGrounded = false;
-    private bool lastGrounded = false;
-    private bool isRunning = false;
-    private bool isAiming = false;
-    private bool isThrowing = false;
-    private bool isInteracting = false;
-    private bool isJumping = false;
-    private bool isFalling = false;
-    private bool isInAir = false;
-    private bool isSpawning = true;
-    private bool isDying = false;
+    [SerializeField] private bool isGrounded = false;
+    [SerializeField] private bool lastGrounded = false;
+    [SerializeField] private bool isRunning = false;
+    [SerializeField] private bool isAiming = false;
+    [SerializeField] private bool isThrowing = false;
+    [SerializeField] private bool isInteracting = false;
+    [SerializeField] private bool isJumping = false;
+    [SerializeField] private bool isFalling = false;
+    [SerializeField] private bool isInAir = false;
+    [SerializeField] private bool isSpawning = true;
+    [SerializeField] private bool isDying = false;
 
     private Vector3 lookDirection;
     private Vector3 throwHeadDirection;

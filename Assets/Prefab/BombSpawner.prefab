@@ -162,3 +162,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   bombPrefab: {fileID: 4846925186976042305, guid: 6fd9afcb5e251dc40b700e3cd0246408, type: 3}
   bombSpawnPoint: {fileID: 3932536405088797040}
+  bombRadius: 3

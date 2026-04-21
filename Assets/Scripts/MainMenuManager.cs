@@ -9,6 +9,7 @@ public class MainMenuManager : MonoBehaviour
     public string level2 = "Level2";
     public string level3 = "Level3";
     public string level4 = "Level4";
+    public string levelMaker = "LevelMaker";
 
     [Header("UI References")]
     public GameObject optionsPanel;
@@ -77,6 +78,11 @@ public class MainMenuManager : MonoBehaviour
     public void LoadLevel4()
     {
         LoadLevel(level4);
+    }
+
+    public void LoadLevelMaker()
+    {
+        LoadLevel(levelMaker);
     }
 
     // LOAD LEVEL FUNCTION

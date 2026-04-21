@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5754084199372789682, guid: d713bdf7eae328045ada009d5968be60, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 875513186010985855, guid: 23e5d960d8a3e7f43a044d2e942b495e, type: 3}
     - target: {fileID: 919132149155446097, guid: d713bdf7eae328045ada009d5968be60, type: 3}
       propertyPath: m_Name
       value: RotatingPlatform

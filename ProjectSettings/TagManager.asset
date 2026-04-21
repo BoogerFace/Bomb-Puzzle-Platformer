@@ -13,6 +13,7 @@ TagManager:
   - NonCollidable
   - Levers
   - ignore
+  - LevelComponent
   layers:
   - Default
   - TransparentFX
@@ -27,7 +28,7 @@ TagManager:
   - Ground
   - LevelComponents
   - ignore
-  - 
+  - MakerUI
   - 
   - 
   - 

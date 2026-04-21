@@ -25,6 +25,16 @@ public class PauseMenuManager : MonoBehaviour
     public AudioClip sliderTickSound;
 
     private bool isPaused = false;
+    
+    [Header("Level Maker Reset Config")]
+    [SerializeField] private bool isLevelMaker = false;
+    [SerializeField] private GameObject makerController;
+    [SerializeField] private GameObject makerCamPvot;
+    [SerializeField] private GameObject makerUI;
+    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject playerUI;
+    [SerializeField] private GameObject fakePlayer;
+
 
     void Awake()
     {
@@ -72,7 +82,14 @@ public class PauseMenuManager : MonoBehaviour
         // Toggle pause with Escape key
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            TogglePause();
+            if (isLevelMaker && makerController.GetComponent<MakerController>().isPlaying)
+            {
+                ResetLevelMaker();
+            }
+            else
+            {
+                TogglePause();
+            }
         }
     }
 
@@ -108,5 +125,19 @@ public class PauseMenuManager : MonoBehaviour
     {
         Time.timeScale = 1f; // Unpause
         SceneManager.LoadScene("MainMenu"); // Change if needed
+    }
+
+    private void ResetLevelMaker()
+    {
+        player.SetActive(false);
+        playerUI.SetActive(false);
+
+        fakePlayer.SetActive(true);
+        makerController.gameObject.SetActive(true);
+        makerUI.gameObject.SetActive(true);
+        makerCamPvot.gameObject.SetActive(true);
+
+        InputSystem.actions.FindActionMap("LevelMaker").Enable();
+        makerController.GetComponent<MakerController>().isPlaying = false;
     }
 }

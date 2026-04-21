@@ -2864,10 +2864,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4954655150884154170, guid: 1124cc031b2155143afac1fa7a2d5ccf, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1124cc031b2155143afac1fa7a2d5ccf, type: 3}
 --- !u!4 &117220001 stripped
 Transform:
@@ -41519,6 +41516,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fac3e0ef2d9088241af7cdc80d1eb19c, type: 3}
       propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: fac3e0ef2d9088241af7cdc80d1eb19c, type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: fac3e0ef2d9088241af7cdc80d1eb19c, type: 3}

@@ -33,17 +33,19 @@ public class PlayerController : MonoBehaviour
 
     public int ammo = 0;
 
-    [SerializeField] private bool isGrounded = false;
-    [SerializeField] private bool lastGrounded = false;
-    [SerializeField] private bool isRunning = false;
-    [SerializeField] private bool isAiming = false;
-    [SerializeField] private bool isThrowing = false;
-    [SerializeField] private bool isInteracting = false;
-    [SerializeField] private bool isJumping = false;
-    [SerializeField] private bool isFalling = false;
-    [SerializeField] private bool isInAir = false;
-    [SerializeField] private bool isSpawning = true;
-    [SerializeField] private bool isDying = false;
+    private bool isGrounded = false;
+    private bool lastGrounded = false;
+    private bool isRunning = false;
+    private bool isAiming = false;
+    private bool isThrowing = false;
+    private bool isInteracting = false;
+    private bool isJumping = false;
+    private bool isFalling = false;
+    private bool isInAir = false;
+    private bool isSpawning = true;
+    private bool isDying = false;
+
+    public bool isLevelMaker = false;
 
     private Vector3 lookDirection;
     private Vector3 throwHeadDirection;
@@ -450,7 +452,14 @@ public class PlayerController : MonoBehaviour
         lr.enabled = false;
         lr.positionCount = 0;
 
-        StartCoroutine(ReloadSceneAfterTime(3f));
+        if (!isLevelMaker)
+        {
+            StartCoroutine(ReloadSceneAfterTime(3f));
+        }
+        else
+        {
+            StartCoroutine(SpawnAfterTime(3f, spawnPoint.transform.position));
+        }
     }
     
 
@@ -517,6 +526,37 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
 
+        if (isLevelMaker)
+        {
+            PlayerHealth hpScript = transform.gameObject.GetComponent<PlayerHealth>();
+            hpScript.TakeDamage(-5);
+        }
+
         SpawnPlayer(spawn_pos);
+    }
+
+
+    void OnEnable()
+    {
+        transform.SetParent(world.transform); 
+        rb = GetComponent<Rigidbody>();
+        model = transform.Find("Model").gameObject;
+        anim = model.GetComponent<Animator>();
+        hitbox = transform.Find("Hitbox").gameObject;
+        lr = GetComponent<LineRenderer>();
+        
+        moveAction = InputSystem.actions.FindAction("Move");
+        jumpAction = InputSystem.actions.FindAction("Jump");
+        aimAction = InputSystem.actions.FindAction("Aim");
+        throwAction = InputSystem.actions.FindAction("Attack");
+        interactAction = InputSystem.actions.FindAction("Interact");
+
+        lookDirection = model.transform.forward;
+
+        // Spawn on Spawn Point
+        spawnPoint = playerSpawner.transform.Find("SpawnPoint").gameObject;
+        SpawnPlayer(spawnPoint.transform.position);
+
+        lastPosition = spawnPoint.transform.position;
     }
 }
